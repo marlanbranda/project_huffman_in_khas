@@ -11,6 +11,7 @@
 
 class pgmReader {
 public:
+    std::string filename;
     int width;
     int height;
     int max_gray;
@@ -18,10 +19,9 @@ public:
     int data_size;
 
     pgmReader(const std::string& filename); // NOLINT(*-explicit-constructor)
-//    ~pgmReader();
+    ~pgmReader();
 
-    int* data_as_array();
-    int** data_as_matrix();
+    char* data_as_array() const;
 
 };
 

@@ -3,8 +3,10 @@
 
 pgmReader::pgmReader(const std::string& filename) { // NOLINT(*-pro-type-member-init)
 
+    this->filename = filename;
     std::ifstream file;
     file.open(filename, std::ifstream::in | std::ifstream::binary);
+
 
     if(!file.is_open()){
         throw std::runtime_error("pgm file can not be opened");
@@ -33,12 +35,12 @@ pgmReader::pgmReader(const std::string& filename) { // NOLINT(*-pro-type-member-
         else
             str[k] += ch;
     }
-    data = file.tellg();
-    width = ASCII_str_to_int(str[0]);
-    height = ASCII_str_to_int(str[1]);
-    max_gray = ASCII_str_to_int(str[2]);
+    this->data = file.tellg();
+    this->width = ASCII_str_to_int(str[0]);
+    this->height = ASCII_str_to_int(str[1]);
+    this->max_gray = ASCII_str_to_int(str[2]);
 
-    if(max_gray != 255){
+    if(this->max_gray != 255){
         throw std::range_error("max_range is not 255");
     }
 
@@ -46,14 +48,21 @@ pgmReader::pgmReader(const std::string& filename) { // NOLINT(*-pro-type-member-
     std::streampos end = file.tellg();
 
     // file size minus metadata
-    data_size = (int)(end - data);
+    this->data_size = (int)(end - data);
+
+    file.close();
 }
 
-//int* pgmReader::data_as_array() {
-//    int* elem;
-//    return elem;
-//}
-//
-//int** pgmReader::data_as_matrix() {
+char* pgmReader::data_as_array() const {
+    char* data_stream = new char[this->data_size];
 
+    std::ifstream file;
+    file.open(this->filename, std::ifstream::in | std::ifstream::binary);
+    file.seekg(this->data);
+    file.read(data_stream, data_size);
+    file.close();
+
+    return data_stream;
 }
+
+pgmReader::~pgmReader() = default;
