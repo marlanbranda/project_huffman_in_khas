@@ -8,4 +8,8 @@ add_executable(dev_process
         achieving_tree.cpp
         code/huffman_node.cpp
         code/huffman_node.h
-        )
+        code/pgmReader.cpp
+        code/pgmReader.h
+        code/miscellaneous.cpp
+        code/miscellaneous.h
+)

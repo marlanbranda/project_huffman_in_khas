@@ -2,9 +2,4 @@
 
 #include <iostream>
 
-typedef struct huffman_node{
-    float freq; 
-    huffman_node* right;
-    huffman_node* left;
-    char data;
-}huff_node;
+
