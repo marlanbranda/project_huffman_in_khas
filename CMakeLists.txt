@@ -16,4 +16,5 @@ add_executable(dev_process
         code/freqTable.h
         code/huffman_encoder.cpp
         code/huffman_encoder.h
+        code/tests.h
 )
