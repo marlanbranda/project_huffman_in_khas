@@ -6,8 +6,7 @@
 freqTable::freqTable(char *data_stream, int size) {
     this->unique_freq = create_frequency_array(data_stream, size);
     this->unique_count = count_unique_symbols();
-    this->unique_array = create_unique_array(data_stream);
-
+    this->unique_array = create_unique_array();
 }
 
 int** freqTable::create_frequency_array(char *data_stream, int size) {
@@ -40,15 +39,15 @@ int freqTable::count_unique_symbols() const {
     return num;
 }
 
-char* freqTable::create_unique_array(char *data_stream) {
+char* freqTable::create_unique_array() {
     char* unique_chars = new char[this->unique_count];
     int** symbols_array = this->unique_freq;
     int num = 0;
 
     for(int i=0; i<256; i++){
         if( symbols_array[i][1] >= 1) {
-            auto ch = (unsigned char) symbols_array[i][0];
-            unique_chars[num] = (int) ch;
+            unique_chars[num] = (char)(unsigned char)symbols_array[i][0];
+            num++;
         }
     }
 

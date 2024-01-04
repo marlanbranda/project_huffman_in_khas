@@ -13,7 +13,7 @@ public:
 
     int** create_frequency_array(char* data_stream, int size);
     int count_unique_symbols() const;
-    char* create_unique_array(char* data_stream);
+    char* create_unique_array();
 };
 
 

@@ -150,7 +150,30 @@ void test5() {
     if(ch2==tr2)
         std::cout << "ch3 and tr3 is same" << std::endl;
 
+}
 
+void test6(){
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
 
+    pgmReader pgmObj = pgmReader(filename);
+
+    char* bytestream = pgmObj.data_as_array();
+
+    freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
+
+    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_6.txt";
+    std::fstream txt_file;
+    txt_file.open(txt_file_path, std::ios::out | std::ios::binary);
+    if(!txt_file.is_open()){
+        std::cerr << "file is not open";
+    }
+
+    txt_file << freqObj.unique_count << "\n";
+
+    for(int i=0; i<freqObj.unique_count; i++){
+        char ch = freqObj.unique_array[i];
+        txt_file.write(&ch, sizeof(char));
+        txt_file.write("\n", sizeof(char));
+    }
 
 }

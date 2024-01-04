@@ -17,6 +17,6 @@ int main(int argc, char *argv[])
     freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
 
 
-    test5();
+    test6();
 
 }
