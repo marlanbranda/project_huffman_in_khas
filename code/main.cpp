@@ -10,4 +10,21 @@ int main(int argc, char *argv[])
 
     char* bytestream = pgmObj.data_as_array();
 
+    /*
+     * freqTable freqObj(bytestream)
+     *
+     * // create dynamic treeNode list
+     * linkedNode
+     * for each element in freqTable until freqObj.unique_count
+     * for loop taking symbol from freqObj.unique_array[i]
+     *          taking frequency from freqObj.unique_freq[i]
+     *
+     * //
+     *
+     *
+     *
+     *
+     *
+     * */
+
 }
