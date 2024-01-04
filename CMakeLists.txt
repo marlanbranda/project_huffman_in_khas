@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(dev_process
         code/main.cpp
-        achieving_tree.cpp
         code/treeNode.cpp
         code/treeNode.h
         code/pgmReader.cpp
