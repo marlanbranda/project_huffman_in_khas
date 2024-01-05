@@ -1,7 +1,6 @@
 #include "freqTable.h"
 
 #include <iostream>
-#include <fstream>
 
 freqTable::freqTable(char *data_stream, int size) {
     this->freq_array = create_frequency_array(data_stream, size);

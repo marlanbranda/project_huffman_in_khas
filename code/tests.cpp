@@ -234,16 +234,6 @@ void test8(){
     if(binaryTreeObj.leaf_nodes != nullptr) {
         linkedNode* elem = binaryTreeObj.leaf_nodes;
 
-//        while(elem->next != nullptr) {
-//            auto nexnext = elem->next->next;
-//            auto parentNode = binaryTreeObj.replace_with_parent(elem, elem->next);
-//
-//            if (nexnext != nullptr)
-//                elem = nexnext;
-//            else
-//                break;
-//        }
-
         auto parentNode = binaryTreeObj.replace_with_parent(elem, elem->next);
 
         elem = parentNode;
@@ -260,4 +250,6 @@ void test8(){
         }
 
     }
+    else
+        std::cout << "leaf_nodes returned nullptr";
 }

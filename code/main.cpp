@@ -1,6 +1,8 @@
 #include <iostream>
 #include <bitset>
+
 #include "tests.h"
+
 #include "pgmReader.h"
 #include "freqTable.h"
 #include "treeNode.h"
@@ -17,5 +19,10 @@ int main(int argc, char *argv[])
 
     freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
 
+    delete bytestream;
+
     binaryTree binaryTreeObj = binaryTree(&freqObj);
+
+
+
 }
