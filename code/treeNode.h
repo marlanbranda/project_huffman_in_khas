@@ -1,6 +1,9 @@
 #ifndef PROJECT_HUFFMAN_IN_KHAS_TREENODE_H
 #define PROJECT_HUFFMAN_IN_KHAS_TREENODE_H
 
+#include <climits>
+#include <iostream>
+
 #include "freqTable.h"
 
 
@@ -40,7 +43,6 @@ public:
 
     linkedNode* create_linked_node(freqTable* freqObj); // every element is leaf-node in returning
     treeNode* create_tree(linkedNode linkedNodeObj); // returning the root
-    treeNode* create_parent_node(treeNode* leftNode, treeNode* rightNode);
     linkedNode* replace_with_parent(linkedNode* leftNode, linkedNode* rightNode);
 
 };

@@ -28,7 +28,7 @@ int linkedNode::length() {
 
     int count = 1;
 
-    for ( ;curr->next != nullptr; ) {
+    while (curr->next != nullptr) {
         curr = curr->next;
         count++;
     }
@@ -59,10 +59,9 @@ linkedNode* linkedNode::tail() {
     return curr;
 }
 
-binaryTree::binaryTree(freqTable *freqObj) {
+binaryTree::binaryTree(freqTable* freqObj) {
     this->leaf_nodes = create_linked_node(freqObj);
     this->root = create_tree(*(this->leaf_nodes));
-
 }
 
 linkedNode* binaryTree::create_linked_node(freqTable* freqObj) {
@@ -85,6 +84,7 @@ linkedNode* binaryTree::create_linked_node(freqTable* freqObj) {
             prev_leaf->next = curr_leaf;
         prev_leaf = curr_leaf;
     }
+    prev_leaf->next = nullptr;
 
     linkedNode* head_of_node = prev_leaf->head();
 
@@ -92,31 +92,77 @@ linkedNode* binaryTree::create_linked_node(freqTable* freqObj) {
 }
 
 treeNode* binaryTree::create_tree(linkedNode linkedNodeObj) {
-    //
+    linkedNode* elem = &linkedNodeObj;
 
-    return nullptr;
+    while(true){
+        elem = elem->head();
+
+        if(elem->length() == 1){
+            return elem->dataNode;
+        }
+
+        else if(elem->length() == 2){
+            linkedNode *parentLinkedNode = replace_with_parent(elem, elem->next);
+            return parentLinkedNode->dataNode;
+        }
+
+        else if(elem->length() >= 3){
+            linkedNode* smallest_elem = elem;
+            linkedNode* second_smallest_elem = elem->next;
+
+            do{
+                elem = elem->next;
+                if ((smallest_elem->dataNode->freq) > (elem->dataNode->freq)) {
+                    second_smallest_elem = smallest_elem;
+                    smallest_elem = elem;
+                }
+
+            }while(elem->next != nullptr);
+
+            __attribute__((unused))
+            linkedNode* parentLinkedNode = replace_with_parent(smallest_elem, second_smallest_elem);
+
+            elem = parentLinkedNode->head();
+        }
+    }
+
 }
 
-linkedNode*  binaryTree::replace_with_parent(linkedNode* leftNode, linkedNode* rightNode) {
-    linkedNode* parentNode = new linkedNode;
-    parentNode->dataNode = create_parent_node(leftNode->dataNode, rightNode->dataNode);
+linkedNode* binaryTree::replace_with_parent(linkedNode* leftNode, linkedNode* rightNode) {
+    linkedNode* parentLinkedNode = new linkedNode;
+    treeNode* pointer_to_treeNode = new treeNode(leftNode->dataNode, rightNode->dataNode);
 
-    // right kicked out of list
-    rightNode->next->prev = rightNode->prev;
-    rightNode->prev->next = rightNode->next;
-    delete rightNode;
+    parentLinkedNode->dataNode = pointer_to_treeNode;
 
-    // parent takes the place of left
-    parentNode->prev = leftNode->prev;
-    parentNode->next = leftNode->next;
-    delete leftNode;
+    // remove from linkedNode
+    if(rightNode->prev != nullptr){
+        rightNode->prev->next = rightNode->next;
+    }
 
+    if(rightNode->next != nullptr){
+        rightNode->next->prev = rightNode->prev;
+    }
 
-    return parentNode;
-}
+    // leftnode switch
+    if(leftNode->prev != nullptr){
+        parentLinkedNode->prev = leftNode->prev;
+        leftNode->prev->next = parentLinkedNode;
+    }
+    else{
+        parentLinkedNode->prev = nullptr;
+    }
 
-treeNode* binaryTree::create_parent_node(treeNode* leftNode, treeNode* rightNode) {
-    auto parentNode = new treeNode(leftNode, rightNode);
-    return parentNode;
+    if(leftNode->next != nullptr){
+        parentLinkedNode->next = leftNode->next;
+        leftNode->next->prev = parentLinkedNode;
+    }
+    else{
+        parentLinkedNode->next = nullptr;
+    }
+
+//    delete leftNode;
+//    delete rightNode;
+
+    return parentLinkedNode;
 }
 
