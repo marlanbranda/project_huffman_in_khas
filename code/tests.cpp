@@ -3,6 +3,7 @@
 #include "tests.h"
 #include "pgmReader.h"
 #include "freqTable.h"
+#include "treeNode.h"
 #include "miscellaneous.h"
 
 void test1(){
@@ -94,14 +95,14 @@ void test4(){
     freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
 
 
-    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\unique_array.txt";
+    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\freq_array.txt";
     std::fstream txt_file;
     txt_file.open(txt_file_path, std::ios::out);
     if(!txt_file.is_open()){
         std::cerr << "file is not open";
     }
 
-    int** symbols_array = freqObj.unique_freq;
+    int** symbols_array = freqObj.freq_array;
 
     for(int i=0; i<256; i++) {
         for (int j=0; j<2; j++) {
@@ -176,4 +177,38 @@ void test6(){
         txt_file.write("\n", sizeof(char));
     }
 
+}
+
+void test7(){
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
+
+    pgmReader pgmObj = pgmReader(filename);
+
+    char* bytestream = pgmObj.data_as_array();
+
+    freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
+
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
+
+    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\bTree_leaf_nodes.txt";
+    std::fstream txt_file;
+    txt_file.open(txt_file_path, std::ios::out);
+    if(!txt_file.is_open()){
+        std::cerr << "file is not open";
+    }
+
+    if(binaryTreeObj.leaf_nodes != nullptr) {
+        linkedNode* elem = binaryTreeObj.leaf_nodes;
+
+        for(int i=0; ; i++) {
+            txt_file << "elem " << i << " of linked node freq:      " << elem->dataNode->freq << std::endl;
+            txt_file << "elem " << i << " of linked node symbol:    " << (int)(unsigned char)elem->dataNode->symbol << std::endl;
+            if(elem->next != nullptr) {
+                elem = elem->next;
+            }
+            else
+                break;
+        }
+
+    }
 }
