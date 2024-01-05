@@ -4,7 +4,7 @@
 #include "freqTable.h"
 
 
-typedef struct treeNode {
+struct treeNode {
 public:
     treeNode* left;
     treeNode* right;
@@ -15,26 +15,28 @@ public:
     treeNode(int freq, char symbol);
     treeNode(treeNode* leftNode, treeNode* rightNode);
 
-}treeNode;
+};
 
 
 struct linkedNode {
 
-    treeNode* treeNode;
+    treeNode* dataNode;
     linkedNode* prev;
     linkedNode* next;
 
     int length();
     linkedNode* head();
     linkedNode* tail();
+
 };
 
 
 class binaryTree {
 public:
-    linkedNode* leafNodes;
+    linkedNode* leaf_nodes;
+    treeNode* root;
 
-    explicit binaryTree(freqTable* freqObj);
+    explicit binaryTree(freqTable* freqObj); // NOLINT(*-explicit-constructor)
 
     linkedNode* create_linked_node(freqTable* freqObj); // every element is leaf-node in returning
     treeNode* create_tree(linkedNode linkedNodeObj); // returning the root
