@@ -4,7 +4,7 @@
 #include <fstream>
 
 freqTable::freqTable(char *data_stream, int size) {
-    this->unique_freq = create_frequency_array(data_stream, size);
+    this->freq_array = create_frequency_array(data_stream, size);
     this->unique_count = count_unique_symbols();
     this->unique_array = create_unique_array();
 }
@@ -29,7 +29,7 @@ int** freqTable::create_frequency_array(char *data_stream, int size) {
 
 int freqTable::count_unique_symbols() const {
     int num = 0;
-    int** symbols_array = this->unique_freq;
+    int** symbols_array = this->freq_array;
 
     for(int i=0; i<256; i++){
         if( symbols_array[i][1] >= 1)
@@ -41,7 +41,7 @@ int freqTable::count_unique_symbols() const {
 
 char* freqTable::create_unique_array() {
     char* unique_chars = new char[this->unique_count];
-    int** symbols_array = this->unique_freq;
+    int** symbols_array = this->freq_array;
     int num = 0;
 
     for(int i=0; i<256; i++){
