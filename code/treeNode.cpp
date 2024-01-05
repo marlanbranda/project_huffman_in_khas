@@ -102,7 +102,16 @@ treeNode* binaryTree::create_tree(linkedNode linkedNodeObj) {
         }
 
         else if(elem->length() == 2){
-            linkedNode *parentLinkedNode = replace_with_parent(elem, elem->next);
+            linkedNode* smallest_elem = elem;
+            linkedNode* second_smallest_elem = elem->next;
+
+            if ((smallest_elem->dataNode->freq) > (second_smallest_elem->dataNode->freq)) {
+                linkedNode* temp = second_smallest_elem;
+                second_smallest_elem = smallest_elem;
+                smallest_elem = temp;
+            }
+
+            linkedNode *parentLinkedNode = replace_with_parent(smallest_elem, second_smallest_elem);
             return parentLinkedNode->dataNode;
         }
 
