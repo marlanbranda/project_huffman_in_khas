@@ -212,3 +212,52 @@ void test7(){
 
     }
 }
+
+void test8(){
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
+
+    pgmReader pgmObj = pgmReader(filename);
+
+    char* bytestream = pgmObj.data_as_array();
+
+    freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
+
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
+
+    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\replace_w_parent.txt";
+    std::fstream txt_file;
+    txt_file.open(txt_file_path, std::ios::out);
+    if(!txt_file.is_open()){
+        std::cerr << "file is not open";
+    }
+
+    if(binaryTreeObj.leaf_nodes != nullptr) {
+        linkedNode* elem = binaryTreeObj.leaf_nodes;
+
+//        while(elem->next != nullptr) {
+//            auto nexnext = elem->next->next;
+//            auto parentNode = binaryTreeObj.replace_with_parent(elem, elem->next);
+//
+//            if (nexnext != nullptr)
+//                elem = nexnext;
+//            else
+//                break;
+//        }
+
+        auto parentNode = binaryTreeObj.replace_with_parent(elem, elem->next);
+
+        elem = parentNode;
+        elem = elem->head();
+
+        for(int i=0; ; i++) {
+            txt_file << "elem " << i << " of linked node freq:      " << elem->dataNode->freq << std::endl;
+            txt_file << "elem " << i << " of linked node symbol:    " << (int)(unsigned char)elem->dataNode->symbol << std::endl;
+            if(elem->next != nullptr) {
+                elem = elem->next;
+            }
+            else
+                break;
+        }
+
+    }
+}

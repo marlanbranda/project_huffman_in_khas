@@ -28,7 +28,7 @@ int linkedNode::length() {
 
     int count = 1;
 
-    if (curr->next != nullptr) {
+    for ( ;curr->next != nullptr; ) {
         curr = curr->next;
         count++;
     }
@@ -92,16 +92,31 @@ linkedNode* binaryTree::create_linked_node(freqTable* freqObj) {
 }
 
 treeNode* binaryTree::create_tree(linkedNode linkedNodeObj) {
-
+    //
 
     return nullptr;
 }
 
-void binaryTree::replace_with_parent(treeNode* leftNode, treeNode* rightNode, treeNode* parentNode) {
+linkedNode*  binaryTree::replace_with_parent(linkedNode* leftNode, linkedNode* rightNode) {
+    linkedNode* parentNode = new linkedNode;
+    parentNode->dataNode = create_parent_node(leftNode->dataNode, rightNode->dataNode);
 
+    // right kicked out of list
+    rightNode->next->prev = rightNode->prev;
+    rightNode->prev->next = rightNode->next;
+    delete rightNode;
+
+    // parent takes the place of left
+    parentNode->prev = leftNode->prev;
+    parentNode->next = leftNode->next;
+    delete leftNode;
+
+
+    return parentNode;
 }
 
 treeNode* binaryTree::create_parent_node(treeNode* leftNode, treeNode* rightNode) {
-    return nullptr;
+    auto parentNode = new treeNode(leftNode, rightNode);
+    return parentNode;
 }
 
