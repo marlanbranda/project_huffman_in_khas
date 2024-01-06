@@ -1,10 +1,4 @@
-#include <iostream>
-#include <fstream>
 #include "tests.h"
-#include "pgmReader.h"
-#include "freqTable.h"
-#include "treeNode.h"
-#include "miscellaneous.h"
 
 void test1(){
     // read the file
@@ -252,4 +246,11 @@ void test8(){
     }
     else
         std::cout << "leaf_nodes returned nullptr";
+}
+
+
+//// this test will provide a visual way to see encodings of chars
+//// which will be created by encoding_matrix in binaryTree class
+void test9(){
+
 }
