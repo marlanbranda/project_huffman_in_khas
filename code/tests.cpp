@@ -330,3 +330,172 @@ void test10(){
         }
     }
 };
+
+void test11(){
+
+    linkedNode* currLN = new linkedNode;
+    currLN->prev = nullptr;
+    currLN->dataNode = new treeNode(5, 'g');
+    for(int i=10; i>0; i--){
+        linkedNode* nextLN = new linkedNode;
+        currLN->next = nextLN;
+        nextLN->prev = currLN;
+        currLN = currLN->next;
+
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist30(1,30); // distribution in range [1, 6]
+
+        nextLN->dataNode = new treeNode(dist30(rng), (char)(i+97) );
+    }
+    currLN = currLN->head();
+
+
+
+
+    for(int i=0; ; i++) {
+        std::cout << currLN << "(" << currLN->prev << ", " << currLN->dataNode->freq << ", " << currLN->next << ")" << std::endl;
+        if(currLN->next != nullptr) {
+            currLN = currLN->next;
+        }
+        else {
+            break;
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    linkedNode* elem_head = currLN->head();
+    for(int i=0; i<2; i++) {
+
+        linkedNode* elem = elem_head->next;
+        while (elem != nullptr) {
+            if (elem_head->dataNode->freq >= elem->dataNode->freq) {
+                elem->swap(elem_head);
+            }
+            if (elem->next != nullptr) {
+                elem = elem->next;
+            } else
+                break;
+        }
+        elem_head = elem_head->next;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    currLN = currLN->head();
+    std::cout << std::endl << std::endl << std::endl;
+    for(int i=0; ; i++) {
+        std::cout << currLN << " (" << currLN->prev << ", " << currLN->dataNode->freq << ", " << currLN->next << ")" << std::endl;
+        if(currLN->next != nullptr) {
+            currLN = currLN->next;
+        }
+        else {
+            break;
+        }
+    }
+};
+
+
+void test12(){
+
+    linkedNode* currLN = new linkedNode;
+    currLN->prev = nullptr;
+    currLN->dataNode = new treeNode(5, 'g');
+    for(int i=10; i>0; i--){
+        linkedNode* nextLN = new linkedNode;
+        currLN->next = nextLN;
+        nextLN->prev = currLN;
+        currLN = currLN->next;
+
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist30(1,30); // distribution in range [1, 6]
+
+        nextLN->dataNode = new treeNode(dist30(rng), (char)(i+97) );
+    }
+    currLN = currLN->head();
+
+
+
+
+    for(int i=0; ; i++) {
+        std::cout << currLN << "(" << currLN->prev << ", " << currLN->dataNode << ", " << currLN->next << ")" << std::endl;
+        if(currLN->next != nullptr) {
+            currLN = currLN->next;
+        }
+        else {
+            break;
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    currLN = currLN->head();
+    treeNode* root;
+
+    while(currLN->next != nullptr) {
+        currLN->sort_least_two();
+
+        linkedNode *smallest_elem = currLN;
+        linkedNode *smallest_second_elem = currLN->next;
+
+        treeNode *parentTreeNode = new treeNode(smallest_elem->dataNode, smallest_second_elem->dataNode);
+        smallest_elem->dataNode = parentTreeNode;
+        smallest_second_elem->remove();
+        root = parentTreeNode;
+    }
+
+    std::cout << root << root->freq << "\tleft:"<< root->left << "\t right:" << root->right;
+    std::cout << root->left << root->freq << "\tleft:"<< root->left << "\t right:" << root->right;
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    currLN = currLN->head();
+    std::cout << std::endl << std::endl << std::endl;
+    for(int i=0; ; i++) {
+        std::cout << currLN << " (" << currLN->prev << ", " << currLN->dataNode->freq << ", " << currLN->next << ")" << std::endl;
+        if(currLN->next != nullptr) {
+            currLN = currLN->next;
+        }
+        else {
+            break;
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+};
+
+void test13(){
+
+    linkedNode* currLN = create_dummy_linked_node();
+    print_linked_node(currLN);
+
+    currLN = currLN->head();
+    treeNode* root;
+
+    while(currLN->next != nullptr) {
+        currLN->sort_least_two();
+
+        linkedNode *smallest_elem = currLN;
+        linkedNode *smallest_second_elem = currLN->next;
+
+        treeNode *parentTreeNode = new treeNode(smallest_elem->dataNode, smallest_second_elem->dataNode);
+        smallest_elem->dataNode = parentTreeNode;
+        smallest_second_elem->remove();
+        root = parentTreeNode;
+
+        print_linked_node(currLN);
+    }
+
+    std::cout << root  << "\tleft:"<< root->left << "\t right:" << root->right << std::endl;
+    std::cout << root->left  << "\tleft:"<< root->left->left << "\t right:" << root->left->right;
+    std::cout << root->right  << "\tleft:"<< root->right->left << "\t right:" << root->right->right;
+
+};
+
+void test14(){
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
+    pgmReader pgmObj = pgmReader(filename);
+    freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
+
+    linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
+    treeNode* root = binaryTreeObj.root;
+};

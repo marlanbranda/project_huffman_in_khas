@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <random>
+#include <ctime>
 
 #include "pgmReader.h"
 #include "freqTable.h"
@@ -22,5 +24,10 @@ void test7();
 void test8();
 void test9();
 void test10();
+void test11();
+void test12();
+void test13();
+void test14();
+
 
 #endif //PROJECT_HUFFMAN_IN_KHAS_TESTS_H

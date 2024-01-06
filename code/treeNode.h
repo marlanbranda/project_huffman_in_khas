@@ -33,6 +33,7 @@ public:
     linkedNode* tail();
     void remove();
     void swap(linkedNode* param);
+    void sort_least_two();
 
 };
 
@@ -46,10 +47,12 @@ public:
     explicit binaryTree(freqTable* freqObj); // NOLINT(*-explicit-constructor)
     ~binaryTree();
 
+    treeNode* create_tree(linkedNode* linkedNodeObj); // TODO tree is not looking optimal & work on it
+
     linkedNode* create_linked_node(freqTable* freqObj); // every element is leaf-node in returning
     linkedNode* deep_copy_linked_list(linkedNode* linkedNodeObj);
-    treeNode* create_tree(linkedNode* linkedNodeObj); // TODO tree is not looking optimal & work on it
     linkedNode* replace_with_parent(linkedNode* leftLinkedNode, linkedNode* rightLinkedNode);
+
     char** create_encoding_matrix(); // TODO now in pseudocode stage
 };
 

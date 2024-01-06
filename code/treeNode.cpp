@@ -84,20 +84,35 @@ void linkedNode::remove() {
 // 0x77(0x58, UMT, 0x42)
 // 0x31(0x35, AYS, 0x81)
 
-
 void linkedNode::swap(linkedNode* param) {
     treeNode* temp = param->dataNode;
     param->dataNode = this->dataNode;
     this->dataNode = temp;
 }
 
+void linkedNode::sort_least_two() {
+    linkedNode* elem_head = this->head();
+    for(int i=0; i<2; i++) {
 
+        linkedNode* elem = elem_head->next;
+        while (elem != nullptr) {
+            if (elem_head->dataNode->freq >= elem->dataNode->freq) {
+                elem->swap(elem_head);
+            }
+            if (elem->next != nullptr) {
+                elem = elem->next;
+            } else
+                break;
+        }
+        elem_head = elem_head->next;
+    }
+}
 
 
 binaryTree::binaryTree(freqTable* freqObj) {
     this->leaf_nodes = create_linked_node(freqObj);
     this->root = create_tree((this->leaf_nodes));
-    this->encoding_matrix = create_encoding_matrix();
+//    this->encoding_matrix = create_encoding_matrix();
 }
 
 
@@ -133,84 +148,28 @@ treeNode* binaryTree::create_tree(linkedNode* linkedNodeObj) {
 
     linkedNode* elem = deep_copy_linked_list(elem_original);
 
-    while(true){
-        elem = elem->head();
+    treeNode* root;
 
-        if (elem->length() == 1) {
-            return elem->dataNode;
-        }
+    while(elem->next != nullptr) {
+        elem->sort_least_two();
 
-        else if (elem->length() == 2) {
-            linkedNode *smallest_elem = elem;
-            linkedNode *second_smallest_elem = elem->next;
+        linkedNode *smallest_elem = elem;
+        linkedNode *smallest_second_elem = elem->next;
 
-            if ((smallest_elem->dataNode->freq) > (second_smallest_elem->dataNode->freq)) {
-                linkedNode *temp = second_smallest_elem;
-                second_smallest_elem = smallest_elem;
-                smallest_elem = temp;
-            }
-
-            linkedNode *parentLinkedNode = replace_with_parent(smallest_elem, second_smallest_elem);
-            return parentLinkedNode->dataNode;
-        }
-
-        else if(elem->length() >= 3){
-            linkedNode* smallest_elem = elem;
-            linkedNode* second_smallest_elem = elem->next;
-
-            elem = elem->next;
-            do{
-                elem = elem->next;
-                if ((smallest_elem->dataNode->freq) > (elem->dataNode->freq)) {
-                    second_smallest_elem = smallest_elem;
-                    smallest_elem = elem;
-                }
-
-            }while(elem->next != nullptr);
-
-            __attribute__((unused))
-            linkedNode* parentLinkedNode = replace_with_parent(smallest_elem, second_smallest_elem);
-
-            elem = parentLinkedNode->head();
-        }
+        treeNode *parentTreeNode = new treeNode(smallest_elem->dataNode, smallest_second_elem->dataNode);
+        smallest_elem->dataNode = parentTreeNode;
+        smallest_second_elem->remove();
+        root = parentTreeNode;
     }
-
+    return root;
 }
 
 linkedNode* binaryTree::replace_with_parent(linkedNode* leftLinkedNode, linkedNode* rightLinkedNode) {
     linkedNode* parentLinkedNode = new linkedNode;
-    treeNode* pointer_to_treeNode = new treeNode(leftLinkedNode->dataNode, rightLinkedNode->dataNode);
-    parentLinkedNode->dataNode = pointer_to_treeNode;
+    treeNode* parentTreeNode = new treeNode(leftLinkedNode->dataNode, rightLinkedNode->dataNode);
+    parentLinkedNode->dataNode = parentTreeNode;
 
-    // remove from linkedNode
-    if(rightLinkedNode->prev != nullptr){
-        rightLinkedNode->prev->next = rightLinkedNode->next;
-    }
 
-    if(rightLinkedNode->next != nullptr){
-        rightLinkedNode->next->prev = rightLinkedNode->prev;
-    }
-
-    // leftnode switch
-    if(leftLinkedNode->prev != nullptr){
-        parentLinkedNode->prev = leftLinkedNode->prev;
-        leftLinkedNode->prev->next = parentLinkedNode;
-    }
-    else{
-        parentLinkedNode->prev = nullptr;
-    }
-
-    if(leftLinkedNode->next != nullptr){
-        parentLinkedNode->next = leftLinkedNode->next;
-        leftLinkedNode->next->prev = parentLinkedNode;
-    }
-    else{
-        parentLinkedNode->next = nullptr;
-    }
-
-//    delete leftLinkedNode;
-
-//    delete rightLinkedNode;
 
     return parentLinkedNode;
 }
