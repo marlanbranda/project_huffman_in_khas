@@ -14,7 +14,9 @@ add_executable(dev_process
         code/tests.cpp
         code/freqTable.cpp
         code/freqTable.h
-        code/huffman_encoder.cpp
-        code/huffman_encoder.h
+        code/hekWriter.cpp
+        code/hekWriter.h
         code/tests.h
+        code/hekReader.cpp
+        code/hekReader.h
 )
