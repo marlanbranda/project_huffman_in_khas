@@ -119,6 +119,7 @@ treeNode* binaryTree::create_tree(linkedNode linkedNodeObj) {
             linkedNode* smallest_elem = elem;
             linkedNode* second_smallest_elem = elem->next;
 
+            elem = elem->next;
             do{
                 elem = elem->next;
                 if ((smallest_elem->dataNode->freq) > (elem->dataNode->freq)) {
@@ -173,5 +174,19 @@ linkedNode* binaryTree::replace_with_parent(linkedNode* leftNode, linkedNode* ri
 //    delete rightNode;
 
     return parentLinkedNode;
+}
+
+char** binaryTree::create_encoding_matrix() {
+    // traverse the tree and get the encodings
+
+        // get the lenght of leaf_nodes
+
+        // dynamic memory allocation in appropriate size
+
+        // walk on leaf_nodes
+            // go to parent, add 0 if left child, add 1 if right child to string
+            // for each create an encoding <char>10101001
+
+    return nullptr;
 }
 
