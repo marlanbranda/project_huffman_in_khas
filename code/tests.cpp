@@ -253,4 +253,80 @@ void test8(){
 //// which will be created by encoding_matrix in binaryTree class
 void test9(){
 
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
+
+    pgmReader pgmObj = pgmReader(filename);
+
+    char* bytestream = pgmObj.data_as_array();
+
+    freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
+
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
+
+    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\encoding_matrix.txt";
+    std::fstream txt_file;
+    txt_file.open(txt_file_path, std::ios::out | std::ios::binary);
+    if(!txt_file.is_open()){
+        std::cerr << "file is not open";
+    }
+
+    for(int i=0; i < 5 ; i++) {
+
+        txt_file << binaryTreeObj.encoding_matrix[i][0] << binaryTreeObj.encoding_matrix[i][1] << std::endl;
+        std::cout << "dummy";
+    }
 }
+
+void test10(){
+
+    linkedNode* currLN = new linkedNode;
+    currLN->prev = nullptr;
+    currLN->dataNode = new treeNode(5, 'g');
+    for(int i=0; i<10; i++){
+        linkedNode* nextLN = new linkedNode;
+        currLN->next = nextLN;
+        nextLN->prev = currLN;
+        currLN = currLN->next;
+
+        nextLN->dataNode = new treeNode(i*5, (char)(i+97) );
+    }
+    currLN = currLN->head();
+
+
+
+
+    for(int i=0; ; i++) {
+        std::cout << currLN << "(" << currLN->prev << ", " << currLN->dataNode->freq << ", " << currLN->next << ")" << std::endl;
+        if(currLN->next != nullptr) {
+            currLN = currLN->next;
+        }
+        else {
+            break;
+        }
+    }
+
+    linkedNode* emre = currLN->head();
+    emre = emre->next->next;
+    linkedNode* umut = currLN->tail();
+    umut = umut->prev->prev;
+
+    treeNode* nodeforeigner = new treeNode(931, '&');
+    linkedNode* foreigner = new linkedNode();
+    foreigner->next = nullptr;
+    foreigner->prev = nullptr;
+    foreigner->dataNode = nodeforeigner;
+
+    emre->swap(foreigner);
+
+    currLN = currLN->head();
+    std::cout << std::endl << std::endl << std::endl;
+    for(int i=0; ; i++) {
+        std::cout << currLN << " (" << currLN->prev << ", " << currLN->dataNode->freq << ", " << currLN->next << ")" << std::endl;
+        if(currLN->next != nullptr) {
+            currLN = currLN->next;
+        }
+        else {
+            break;
+        }
+    }
+};

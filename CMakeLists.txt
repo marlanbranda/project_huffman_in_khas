@@ -12,11 +12,11 @@ add_executable(dev_process
         code/miscellaneous.cpp
         code/miscellaneous.h
         code/tests.cpp
+        code/tests.h
         code/freqTable.cpp
         code/freqTable.h
         code/hekWriter.cpp
         code/hekWriter.h
-        code/tests.h
         code/hekReader.cpp
         code/hekReader.h
 )

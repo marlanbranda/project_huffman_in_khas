@@ -23,6 +23,7 @@ treeNode::treeNode(treeNode* leftNode, treeNode* rightNode) {
     this->symbol = leftNode->symbol;
 }
 
+
 int linkedNode::length() {
     linkedNode* curr = this->head();
 
@@ -34,6 +35,8 @@ int linkedNode::length() {
     }
     return count;
 }
+
+
 
 linkedNode* linkedNode::head() {
     linkedNode* curr = this;
@@ -59,10 +62,44 @@ linkedNode* linkedNode::tail() {
     return curr;
 }
 
+void linkedNode::remove() {
+
+    if(this->prev != nullptr){
+        this->prev->next = this->next;
+    }
+
+    if(this->next != nullptr){
+        this->next->prev = this->prev;
+    }
+
+    delete this;
+}
+
+// 0x58(null, EMR, 0x77)  0x77(0x58, UMT, 0x42) 0x42(0x77, ALI, 0x35) 0x35(0x42, VEL, 0x31) 0x31(0x35, AYS, 0x81) 0x81(0x31, HEL, null)
+// 0x58(null, EMR, 0x77)  0x77(0x58, UMT, 0x42) 0x42(0x77, ALI, 0x35) 0x35(0x42, VEL, 0x31) 0x31(0x35, AYS, 0x81) 0x81(0x31, HEL, null)
+//                        0x31(0x35, AYS, 0x81)                                             0x77(0x58, UMT, 0x42)
+
+// 0x58(null, EMR, 0x77)  0x77(0x58, AYS, 0x42) 0x42(0x77, ALI, 0x35) 0x35(0x42, VEL, 0x31) 0x31(0x35, UMT, 0x81) 0x81(0x31, HEL, null)
+
+// 0x77(0x58, UMT, 0x42)
+// 0x31(0x35, AYS, 0x81)
+
+
+void linkedNode::swap(linkedNode* param) {
+    treeNode* temp = param->dataNode;
+    param->dataNode = this->dataNode;
+    this->dataNode = temp;
+}
+
+
+
+
 binaryTree::binaryTree(freqTable* freqObj) {
     this->leaf_nodes = create_linked_node(freqObj);
-    this->root = create_tree(*(this->leaf_nodes));
+    this->root = create_tree((this->leaf_nodes));
+    this->encoding_matrix = create_encoding_matrix();
 }
+
 
 linkedNode* binaryTree::create_linked_node(freqTable* freqObj) {
 
@@ -91,22 +128,24 @@ linkedNode* binaryTree::create_linked_node(freqTable* freqObj) {
     return head_of_node;
 }
 
-treeNode* binaryTree::create_tree(linkedNode linkedNodeObj) {
-    linkedNode* elem = &linkedNodeObj;
+treeNode* binaryTree::create_tree(linkedNode* linkedNodeObj) {
+    linkedNode* elem_original = linkedNodeObj;
+
+    linkedNode* elem = deep_copy_linked_list(elem_original);
 
     while(true){
         elem = elem->head();
 
-        if(elem->length() == 1){
+        if (elem->length() == 1) {
             return elem->dataNode;
         }
 
-        else if(elem->length() == 2){
-            linkedNode* smallest_elem = elem;
-            linkedNode* second_smallest_elem = elem->next;
+        else if (elem->length() == 2) {
+            linkedNode *smallest_elem = elem;
+            linkedNode *second_smallest_elem = elem->next;
 
             if ((smallest_elem->dataNode->freq) > (second_smallest_elem->dataNode->freq)) {
-                linkedNode* temp = second_smallest_elem;
+                linkedNode *temp = second_smallest_elem;
                 second_smallest_elem = smallest_elem;
                 smallest_elem = temp;
             }
@@ -138,55 +177,140 @@ treeNode* binaryTree::create_tree(linkedNode linkedNodeObj) {
 
 }
 
-linkedNode* binaryTree::replace_with_parent(linkedNode* leftNode, linkedNode* rightNode) {
+linkedNode* binaryTree::replace_with_parent(linkedNode* leftLinkedNode, linkedNode* rightLinkedNode) {
     linkedNode* parentLinkedNode = new linkedNode;
-    treeNode* pointer_to_treeNode = new treeNode(leftNode->dataNode, rightNode->dataNode);
-
+    treeNode* pointer_to_treeNode = new treeNode(leftLinkedNode->dataNode, rightLinkedNode->dataNode);
     parentLinkedNode->dataNode = pointer_to_treeNode;
 
     // remove from linkedNode
-    if(rightNode->prev != nullptr){
-        rightNode->prev->next = rightNode->next;
+    if(rightLinkedNode->prev != nullptr){
+        rightLinkedNode->prev->next = rightLinkedNode->next;
     }
 
-    if(rightNode->next != nullptr){
-        rightNode->next->prev = rightNode->prev;
+    if(rightLinkedNode->next != nullptr){
+        rightLinkedNode->next->prev = rightLinkedNode->prev;
     }
 
     // leftnode switch
-    if(leftNode->prev != nullptr){
-        parentLinkedNode->prev = leftNode->prev;
-        leftNode->prev->next = parentLinkedNode;
+    if(leftLinkedNode->prev != nullptr){
+        parentLinkedNode->prev = leftLinkedNode->prev;
+        leftLinkedNode->prev->next = parentLinkedNode;
     }
     else{
         parentLinkedNode->prev = nullptr;
     }
 
-    if(leftNode->next != nullptr){
-        parentLinkedNode->next = leftNode->next;
-        leftNode->next->prev = parentLinkedNode;
+    if(leftLinkedNode->next != nullptr){
+        parentLinkedNode->next = leftLinkedNode->next;
+        leftLinkedNode->next->prev = parentLinkedNode;
     }
     else{
         parentLinkedNode->next = nullptr;
     }
 
-//    delete leftNode;
-//    delete rightNode;
+//    delete leftLinkedNode;
+
+//    delete rightLinkedNode;
 
     return parentLinkedNode;
 }
 
 char** binaryTree::create_encoding_matrix() {
     // traverse the tree and get the encodings
+    linkedNode* elem = this->leaf_nodes;
 
-        // get the lenght of leaf_nodes
+    // get the lenght of leaf_nodes
+    int len_of_leaves = elem->length();
 
-        // dynamic memory allocation in appropriate size
+    // dynamic memory allocation in appropriate size
+    char** encoding_matrix = new char*[len_of_leaves];
 
-        // walk on leaf_nodes
-            // go to parent, add 0 if left child, add 1 if right child to string
-            // for each create an encoding <char>10101001
+    // walk on leaf_nodes
+    for(int i=0; i < len_of_leaves; i++){
+        std::string encoding;
 
-    return nullptr;
+        // go to parent, add 0 if left child, add 1 if right child to string
+        treeNode* curr_node = elem->dataNode;
+        encoding += curr_node->symbol;
+
+        while(curr_node != this->root){
+            treeNode* parent_node = curr_node->parent;
+            if(parent_node->left == curr_node){
+                encoding += "0";
+            }
+            else if(parent_node->right == curr_node){
+                encoding += "1";
+            }
+            else{
+                throw std::logic_error("parent and child has some problems");
+            }
+            curr_node = parent_node;
+        }
+
+        char* row = encoding_matrix[i];
+        row = new char[encoding.length()];
+
+        for(int j =0; j < encoding.length(); j++ ){
+            row[j] = encoding[j];
+            std::cout << row[j];
+        }
+        std::cout << std::endl;
+
+        elem = elem->next;
+    }
+
+    return encoding_matrix;
 }
+
+linkedNode* binaryTree::deep_copy_linked_list(linkedNode* linkedNodeObj) {
+    linkedNode* copy_head = new linkedNode;
+    copy_head->prev = nullptr;
+
+    linkedNode* original = linkedNodeObj;
+    original = original->head();
+
+    linkedNode* copy = copy_head;
+    while (original != nullptr) {
+        copy->dataNode = original->dataNode;
+
+        if (original->next != nullptr) {
+            copy->next = new linkedNode;
+            copy->next->prev = copy;
+
+            original = original->next;
+            copy = copy->next;
+        }
+        else{
+            copy->next = nullptr;
+            break;
+        }
+    }
+    return copy_head;
+}
+
+binaryTree::~binaryTree() {
+    delete this->leaf_nodes;
+    delete this->root;
+    delete this->encoding_matrix;
+}
+
+/*
+ *
+ * a b c d e
+ *  q c d e
+ *  w c e
+ *  w r
+ *  t
+ *
+ *         t
+ *     w       r
+ *   q   d   c   e
+ *  a b
+ *
+ *  a= 000
+ *  b= 001
+ *  c= 10
+ *  d= 01
+ *  e= 11
+ */
 

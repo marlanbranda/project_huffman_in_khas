@@ -3,6 +3,7 @@
 
 #include <climits>
 #include <iostream>
+#include <string>
 
 #include "freqTable.h"
 
@@ -20,8 +21,8 @@ public:
 
 };
 
-
 struct linkedNode {
+public:
 
     treeNode* dataNode;
     linkedNode* prev;
@@ -30,6 +31,8 @@ struct linkedNode {
     int length();
     linkedNode* head();
     linkedNode* tail();
+    void remove();
+    void swap(linkedNode* param);
 
 };
 
@@ -41,10 +44,12 @@ public:
     char** encoding_matrix; // TODO add the construction of this to constructor at the end
 
     explicit binaryTree(freqTable* freqObj); // NOLINT(*-explicit-constructor)
+    ~binaryTree();
 
     linkedNode* create_linked_node(freqTable* freqObj); // every element is leaf-node in returning
-    treeNode* create_tree(linkedNode linkedNodeObj); // TODO tree is not looking optimal & work on it
-    linkedNode* replace_with_parent(linkedNode* leftNode, linkedNode* rightNode);
+    linkedNode* deep_copy_linked_list(linkedNode* linkedNodeObj);
+    treeNode* create_tree(linkedNode* linkedNodeObj); // TODO tree is not looking optimal & work on it
+    linkedNode* replace_with_parent(linkedNode* leftLinkedNode, linkedNode* rightLinkedNode);
     char** create_encoding_matrix(); // TODO now in pseudocode stage
 };
 
