@@ -20,7 +20,7 @@ treeNode::treeNode(treeNode* leftNode, treeNode* rightNode) {
     rightNode->parent = this;
 
     // symbols of the nodes that left and right is not nullptr is not important
-    this->symbol = leftNode->symbol;
+//    this->symbol;
 }
 
 
@@ -112,7 +112,7 @@ void linkedNode::sort_least_two() {
 binaryTree::binaryTree(freqTable* freqObj) {
     this->leaf_nodes = create_linked_node(freqObj);
     this->root = create_tree((this->leaf_nodes));
-//    this->encoding_matrix = create_encoding_matrix();
+    this->encoding_matrix = create_encoding_matrix();
 }
 
 
@@ -169,52 +169,31 @@ linkedNode* binaryTree::replace_with_parent(linkedNode* leftLinkedNode, linkedNo
     treeNode* parentTreeNode = new treeNode(leftLinkedNode->dataNode, rightLinkedNode->dataNode);
     parentLinkedNode->dataNode = parentTreeNode;
 
-
-
     return parentLinkedNode;
 }
 
-char** binaryTree::create_encoding_matrix() {
-    // traverse the tree and get the encodings
-    linkedNode* elem = this->leaf_nodes;
+encoding_struct* binaryTree::create_encoding_matrix() {
 
-    // get the lenght of leaf_nodes
+    linkedNode* elem = this->leaf_nodes;
     int len_of_leaves = elem->length();
 
-    // dynamic memory allocation in appropriate size
-    char** encoding_matrix = new char*[len_of_leaves];
+    encoding_struct* encoding_matrix = new encoding_struct[len_of_leaves];
+    auto p = encoding_matrix;
+    for(int i=0; i < len_of_leaves; i++) {
+        p->symbol = elem->dataNode->symbol;
 
-    // walk on leaf_nodes
-    for(int i=0; i < len_of_leaves; i++){
-        std::string encoding;
-
-        // go to parent, add 0 if left child, add 1 if right child to string
-        treeNode* curr_node = elem->dataNode;
-        encoding += curr_node->symbol;
-
-        while(curr_node != this->root){
-            treeNode* parent_node = curr_node->parent;
-            if(parent_node->left == curr_node){
-                encoding += "0";
+        treeNode* currNode = elem->dataNode;
+        do{
+            treeNode* parentNode = currNode->parent;
+            if (currNode == parentNode->left) { // NOLINT(*-branch-clone)
+                p->binary_encoding += '0';
+            } else {
+                p->binary_encoding += '1';
             }
-            else if(parent_node->right == curr_node){
-                encoding += "1";
-            }
-            else{
-                throw std::logic_error("parent and child has some problems");
-            }
-            curr_node = parent_node;
-        }
+            currNode = parentNode;
+        }while(currNode != this->root);
 
-        char* row = encoding_matrix[i];
-        row = new char[encoding.length()];
-
-        for(int j =0; j < encoding.length(); j++ ){
-            row[j] = encoding[j];
-            std::cout << row[j];
-        }
-        std::cout << std::endl;
-
+        p++;
         elem = elem->next;
     }
 
@@ -250,7 +229,7 @@ linkedNode* binaryTree::deep_copy_linked_list(linkedNode* linkedNodeObj) {
 binaryTree::~binaryTree() {
     delete this->leaf_nodes;
     delete this->root;
-    delete this->encoding_matrix;
+//    delete this->encoding_matrix;
 }
 
 /*

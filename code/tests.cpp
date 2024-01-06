@@ -248,9 +248,11 @@ void test8(){
         std::cout << "leaf_nodes returned nullptr";
 }
 
-
-//// this test will provide a visual way to see encodings of chars
-//// which will be created by encoding_matrix in binaryTree class
+/*
+ * THIS TEST IS DEFUNCT
+ */
+// this test will provide a visual way to see encodings of chars
+// which will be created by encoding_matrix in binaryTree class
 void test9(){
 
     std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
@@ -270,11 +272,11 @@ void test9(){
         std::cerr << "file is not open";
     }
 
-    for(int i=0; i < 5 ; i++) {
-
-        txt_file << binaryTreeObj.encoding_matrix[i][0] << binaryTreeObj.encoding_matrix[i][1] << std::endl;
-        std::cout << "dummy";
-    }
+//    for(int i=0; i < 5 ; i++) {
+//
+//        txt_file << binaryTreeObj.encoding_matrix[i][0] << binaryTreeObj.encoding_matrix[i][1] << std::endl;
+//        std::cout << "dummy";
+//    }
 }
 
 void test10(){
@@ -485,8 +487,8 @@ void test13(){
     }
 
     std::cout << root  << "\tleft:"<< root->left << "\t right:" << root->right << std::endl;
-    std::cout << root->left  << "\tleft:"<< root->left->left << "\t right:" << root->left->right;
-    std::cout << root->right  << "\tleft:"<< root->right->left << "\t right:" << root->right->right;
+    std::cout << root->left  << "\tleft:"<< root->left->left << "\t right:" << root->left->right << std::endl;
+    std::cout << root->right  << "\tleft:"<< root->right->left << "\t right:" << root->right->right << std::endl;
 
 };
 
@@ -498,4 +500,21 @@ void test14(){
 
     linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
     treeNode* root = binaryTreeObj.root;
-};
+    encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
+
+    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\encoding_matrix.txt";
+    std::fstream txt_file;
+    txt_file.open(txt_file_path, std::ios::out | std::ios::binary);
+    if(!txt_file.is_open()){
+        std::cerr << "file is not open";
+    }
+
+    for(int i=0; i<leaf_nodes->length(); i++){
+        encoding_struct* elem = encoding_matrix;
+
+        txt_file << (int)(unsigned char)(elem->symbol) << "\t" << elem->binary_encoding << std::endl;
+
+        encoding_matrix++;
+    }
+
+}

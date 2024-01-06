@@ -9,7 +9,7 @@
 
 
 struct treeNode {
-public:
+
     treeNode* left;
     treeNode* right;
     treeNode* parent;
@@ -22,7 +22,6 @@ public:
 };
 
 struct linkedNode {
-public:
 
     treeNode* dataNode;
     linkedNode* prev;
@@ -37,12 +36,16 @@ public:
 
 };
 
+struct encoding_struct {
+    char symbol;
+    std::string binary_encoding;
+};
 
 class binaryTree {
 public:
     linkedNode* leaf_nodes;
     treeNode* root;
-    char** encoding_matrix; // TODO add the construction of this to constructor at the end
+    encoding_struct* encoding_matrix; // TODO add the construction of this to constructor at the end
 
     explicit binaryTree(freqTable* freqObj); // NOLINT(*-explicit-constructor)
     ~binaryTree();
@@ -53,7 +56,7 @@ public:
     linkedNode* deep_copy_linked_list(linkedNode* linkedNodeObj);
     linkedNode* replace_with_parent(linkedNode* leftLinkedNode, linkedNode* rightLinkedNode);
 
-    char** create_encoding_matrix(); // TODO now in pseudocode stage
+    encoding_struct* create_encoding_matrix(); // TODO now in pseudocode stage
 };
 
 #endif //PROJECT_HUFFMAN_IN_KHAS_TREENODE_H
