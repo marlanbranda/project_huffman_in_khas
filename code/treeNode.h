@@ -39,6 +39,8 @@ struct linkedNode {
 struct encoding_struct {
     char symbol;
     std::string binary_encoding;
+
+    void print_encoding_struct();
 };
 
 class binaryTree {

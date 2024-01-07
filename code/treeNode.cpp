@@ -109,6 +109,10 @@ void linkedNode::sort_least_two() {
 }
 
 
+void encoding_struct::print_encoding_struct() {
+    std::cout << (int)(unsigned char)this->symbol << '\t' << this->binary_encoding << std::endl;
+}
+
 binaryTree::binaryTree(freqTable* freqObj) {
     this->leaf_nodes = create_linked_node(freqObj);
     this->root = create_tree((this->leaf_nodes));
@@ -251,4 +255,3 @@ binaryTree::~binaryTree() {
  *  d= 01
  *  e= 11
  */
-

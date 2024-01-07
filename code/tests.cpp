@@ -520,6 +520,24 @@ void test14(){
 }
 
 void test15(){
+
+    std::string str;
+    char byte = 0b01010101;
+    unsigned char mask = 0b10000000;
+    for (int k = 0; k < 8; k++) {
+        if (byte & mask) {
+            str += '1';
+        }else{
+            str += '0';
+        }
+
+        mask >>= 1;
+    }
+
+    std::cout << str;
+
+    std::cout << std::endl << std::endl << std::endl;
+
     std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36.pgm"; // NOLINT(*-raw-string-literal)
     pgmReader pgmObj = pgmReader(filename);
     freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
@@ -539,26 +557,171 @@ void test15(){
                                        pgmObj.data_size,
                                        pgmObj.data_as_array() );
 
+    // hek writer cout firts two binary encoding
     std::ifstream hek_file_read(hek_file_name, std::ios::binary);
     char temp;
     short int tempint;
 
+    // width
     hek_file_read.read((char*)&tempint, sizeof(short int));
     std::cout << tempint << std::endl;
 
+    // height
     hek_file_read.read((char*)&tempint, sizeof(short int));
     std::cout << tempint << std::endl;
 
+    // padding
     hek_file_read.read(&temp, sizeof(char));
     std::cout << temp << std::endl;
 
+    //encoding len
+    hek_file_read.read((char*)&tempint, sizeof(short int));
+    std::cout << "encoding len ;"<<tempint << std::endl;
+
+    for(int i=0; i<10; i++)
+    {    // symbol
+        hek_file_read.read(&temp, sizeof(char));
+        std::cout << (int) (unsigned char) temp << " symbol" << std::endl;
+
+        // len of binary encoding
+        hek_file_read.read(&temp, sizeof(char));
+        std::cout << (int) (unsigned char) temp << " len of bincoding " << std::endl;
+
+        for (int k=(int)(unsigned char)temp; k > 0;) {
+            hek_file_read.read(&temp, sizeof(char));
+            std::cout << (int) (unsigned char) temp << std::endl;
+            k -= 8;
+        }
+    }
+
+
+
+};
+
+void test16(){
+
+    std::string str;
+    char byte = 0b01010101;
+    unsigned char mask = 0b10000000;
+    for (int k = 0; k < 8; k++) {
+        if (byte & mask) {
+            str += '1';
+        }else{
+            str += '0';
+        }
+
+        mask >>= 1;
+    }
+
+    std::cout << str;
+
+    std::cout << std::endl << std::endl << std::endl;
+
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36.pgm"; // NOLINT(*-raw-string-literal)
+    pgmReader pgmObj = pgmReader(filename);
+    freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
+    linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
+    encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
+
+    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test15.hek"; // NOLINT(*-raw-string-literal)
+    hekWriter hekWriterObj = hekWriter(hek_file_name,
+                                       (short int)pgmObj.width,
+                                       (short int)pgmObj.height,
+                                       (short int)leaf_nodes->length(),
+                                       encoding_matrix,
+                                       pgmObj.data_size,
+                                       pgmObj.data_as_array() );
+
+    // hek writer cout firts two binary encoding
+    std::ifstream hek_file_read(hek_file_name, std::ios::binary);
+
+    hekReader hekReaderObj = hekReader();
+
+    hekReaderObj.read_hek(hek_file_name);
+
+    std::cout << "\n\n\n\n";
+
+    char temp;
+    short int tempint;
+
+    // width
     hek_file_read.read((char*)&tempint, sizeof(short int));
     std::cout << tempint << std::endl;
 
-    hek_file_read.read(&temp, sizeof(char));
-    std::cout << (int)(unsigned char)temp << std::endl;
+    // height
+    hek_file_read.read((char*)&tempint, sizeof(short int));
+    std::cout << tempint << std::endl;
 
+    // padding
     hek_file_read.read(&temp, sizeof(char));
-    std::cout << (int)(unsigned char)temp << std::endl;
+    std::cout << temp << std::endl;
+
+    //encoding len
+    hek_file_read.read((char*)&tempint, sizeof(short int));
+    std::cout << "encoding len ;"<<tempint << std::endl;
+
+    for(int i=0; i<10; i++)
+    {    // symbol
+        hek_file_read.read(&temp, sizeof(char));
+        std::cout << (int) (unsigned char) temp << " symbol" << std::endl;
+
+        // len of binary encoding
+        hek_file_read.read(&temp, sizeof(char));
+        std::cout << (int) (unsigned char) temp << " len of bincoding " << std::endl;
+
+        for (int k=(int)(unsigned char)temp; k > 0;) {
+            hek_file_read.read(&temp, sizeof(char));
+            std::cout << (int) (unsigned char) temp << std::endl;
+            k -= 8;
+        }
+    }
+
+    std::cout << "\n\n\n\n";
+
+    std::cout << hekReaderObj.width << '\n';
+    std::cout << hekReaderObj.height << '\n';
+    std::cout << hekReaderObj.padding_byte << '\n';
+    std::cout << hekReaderObj.encoding_len << '\n';
+
+};
+
+
+void test17(){
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36.pgm"; // NOLINT(*-raw-string-literal)
+    pgmReader pgmObj = pgmReader(filename);
+    freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
+    linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
+    encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
+
+    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test15.hek"; // NOLINT(*-raw-string-literal)
+    hekWriter hekWriterObj = hekWriter(hek_file_name,
+                                       (short int)pgmObj.width,
+                                       (short int)pgmObj.height,
+                                       (short int)leaf_nodes->length(),
+                                       encoding_matrix,
+                                       pgmObj.data_size,
+                                       pgmObj.data_as_array() );
+
+    // hek writer COUT firts two binary encoding
+    std::ifstream hek_file_read(hek_file_name, std::ios::binary);
+
+    hekReader hekReaderObj = hekReader();
+
+    // COUT!! hek reader couts firts ten elements of binary encoding
+    hekReaderObj.read_hek(hek_file_name);
+
+    // pgm file data stream
+    char* data_stream = pgmObj.data_as_array();
+    for(int i=0; i<100; i++)
+    {
+        std::cout << (int)(unsigned char)data_stream[i] << ' ';
+    }
+
+    std::cout << "\n\n\n\n\n\n\n\n";
+
+    // hek_reader decoded char stream
+
 
 };
