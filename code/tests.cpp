@@ -29,7 +29,7 @@ void test2(){
 
     char _trial1 = '~'; // 126 as expected
     char _trial2 = ' ' + '_'; // 32+95=127 as expected
-    char _trial3 = ' ' + '`'; // 32+96 should be 128 but it is -128
+    char _trial3 = ' ' + '`'; // 32+96 should be 128, but it is -128
     unsigned char _trial4 = ' ' + '`';
     unsigned char _trial5 = (unsigned char) _trial3;
 
@@ -117,7 +117,7 @@ void test5() {
     char tr1, tr2, tr3;
 
     ch1 = ' ' + '_'; // 32+95=127 as expected
-    ch2 = ' ' + '`'; // 32+96 should be 128 but it is -128
+    ch2 = ' ' + '`'; // 32+96 should be 128, but it is -128
     ch3 =  '<' + 'F'; // 60 + 70 it is probably -126
 
     uch1 = (unsigned char) ch1;
@@ -661,7 +661,7 @@ void test16(){
     hek_file_read.read((char*)&tempint, sizeof(short int));
     std::cout << "encoding len ;"<<tempint << std::endl;
 
-    for(int i=0; i<10; i++)
+    for(int i=0; i<20; i++)
     {    // symbol
         hek_file_read.read(&temp, sizeof(char));
         std::cout << (int) (unsigned char) temp << " symbol" << std::endl;
@@ -695,6 +695,11 @@ void test17(){
     linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
     encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
 
+    // encoding table we derive from the pgm file
+    for(int i=0; i<leaf_nodes->length();i++) {
+        encoding_matrix[i].print_encoding_struct();
+    }
+
     std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test15.hek"; // NOLINT(*-raw-string-literal)
     hekWriter hekWriterObj = hekWriter(hek_file_name,
                                        (short int)pgmObj.width,
@@ -704,22 +709,38 @@ void test17(){
                                        pgmObj.data_size,
                                        pgmObj.data_as_array() );
 
-    // hek writer COUT firts two binary encoding
+
+
+
+
+
+
+
+
+
+
+
+
+//     hek writer COUT firts two binary encoding
+
+
     std::ifstream hek_file_read(hek_file_name, std::ios::binary);
 
     hekReader hekReaderObj = hekReader();
 
     // COUT!! hek reader couts firts ten elements of binary encoding
     hekReaderObj.read_hek(hek_file_name);
-
+//
+//    std::cout << "\n\n\n\n\n\n\n\n";
+//
     // pgm file data stream
     char* data_stream = pgmObj.data_as_array();
-    for(int i=0; i<100; i++)
+    for(int i=0; i<20; i++)
     {
         std::cout << (int)(unsigned char)data_stream[i] << ' ';
     }
 
-    std::cout << "\n\n\n\n\n\n\n\n";
+
 
     // hek_reader decoded char stream
 

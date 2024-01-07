@@ -5,6 +5,7 @@ hekReader::hekReader() {
     char magic_number[3] = "P5";
     this->magic_number = magic_number;
     this->max_gray = 255;
+
 }
 
 void hekReader::read_hek(std::string hek_file_name) {
@@ -48,28 +49,27 @@ void hekReader::read_hek(std::string hek_file_name) {
         int len_of_bincoding = (int) (unsigned char) temp;
 
 
+        int pos = 0;
         for (int k=(int)(unsigned char)temp; k > 0;) {
 
             hek_file_read.read(&temp, sizeof(char));
 
-            int pos = 0;
             char byte = temp;
             unsigned char mask = 0b10000000;
-            for (int m = 0; m < len_of_bincoding; m++) {
+            while ( pos < len_of_bincoding) {
                 if (byte & mask) {
                     encoding_matrix[i].binary_encoding += '1';
                 }else{
                     encoding_matrix[i].binary_encoding += '0';
                 }
                 pos++;
+                mask >>= 1;
 
+                // if encoding contains coding bigger than 15bits program will crash
                 if(pos==8){
-                    hek_file_read.read(&temp, sizeof(char));
-                    mask = 0b10000000;
-                    pos=0;
+                    break;
                 }
 
-                mask >>= 1;
             }
 
             k -= 8;
@@ -77,15 +77,84 @@ void hekReader::read_hek(std::string hek_file_name) {
         }
     }
 
-    // read data
-
-    // let's build tree first
-    // leaf nodes
-//    for(int i=0; i<encoding_len; i++){
-//        // freq will not be important here as I will build tree based on the encoding matrix.binary_encoding
-//        treeNode* treeNodeObj = new treeNode(0, encoding_matrix->symbol);
-//
+//    for(int i=0; i<encoding_len; i++)
+//    {
+//        encoding_matrix[i].print_encoding_struct();
 //    }
+
+    /*
+     *
+     * HERE WE READ DATA
+     *
+     */
+
+    std::streampos curr = hek_file_read.tellg();
+
+    hek_file_read.seekg(0, std::ios::end);
+    std::streampos end = hek_file_read.tellg();
+
+    hek_file_read.seekg(curr);
+
+    int data_stream_len = int(end) - int(curr);
+
+
+    std::string data_stream;
+    char* data_encoded = new char[data_stream_len];
+    char* p_data_encoded = data_encoded;
+    int p_data_encoded_index = 0;
+    hek_file_read.read(data_encoded, sizeof(char) * data_stream_len);
+    hek_file_read.close();
+
+    //
+    for(int i=0; i<1; i++) {
+        std::cout << (int)(unsigned int)data_encoded[0] << std::endl;
+    }
+
+
+    std::string buffer;
+    int pos=0;
+    unsigned char mask = 0b10000000;
+
+    // one char at a time
+    for(int i=0; i<encoding_len; i++){
+
+        do {
+            // encoded datadan bir bit ekle
+            if ((mask) & (*p_data_encoded)) {
+                buffer += '1';
+            } else {
+                buffer += '0';
+            }
+            pos++;
+            mask >>= 1;
+            if (pos == 8) {
+                pos = 0;
+                mask = 0b10000000;
+                if(p_data_encoded_index != data_stream_len - 1 ) {
+                    p_data_encoded += 1;
+                    p_data_encoded_index += 1;
+                }
+            }
+
+            // check the buffer
+            for(int j=0; j< encoding_len; j++){
+                if(encoding_matrix[j].binary_encoding == buffer)
+                {
+                    data_stream += encoding_matrix[j].symbol;
+                    std::cout << "this is buffer : " << buffer << std::endl;
+
+                    buffer.clear();
+                    break;
+                }
+            }
+            if(buffer.length() >= 16){
+                std::cerr << "this is buffer : " << buffer << std::endl;
+                throw std::logic_error("buffer enlarged too much");
+            }
+
+        }while(!buffer.empty());
+    }
+
 
 }
 

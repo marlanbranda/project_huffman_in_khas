@@ -19,7 +19,6 @@ public:
     int encoding_len;
     encoding_struct* encoding_matrix;
     int data_size;
-    char* data_stream;
 
     hekReader();
 

@@ -190,9 +190,9 @@ encoding_struct* binaryTree::create_encoding_matrix() {
         do{
             treeNode* parentNode = currNode->parent;
             if (currNode == parentNode->left) { // NOLINT(*-branch-clone)
-                p->binary_encoding += '0';
+                p->binary_encoding = '0' + p->binary_encoding;
             } else {
-                p->binary_encoding += '1';
+                p->binary_encoding = '1' + p->binary_encoding;
             }
             currNode = parentNode;
         }while(currNode != this->root);
