@@ -21,21 +21,28 @@
 #include "treeNode.h"
 
 #include <fstream>
+#include <bitset>
 
 
 class hekWriter {
-    std::ofstream FILE;
+public:
+    std::string filename;
 
     int width;
     int height;
+    // maxgray 255
     char padding_byte; // this byte will be helpful if the last byte is padded
 
     char** encoding_matrix;
     char* data_stream;
 
-    hekWriter();
+    hekWriter(std::string& filename,
+              short int width,
+              short int height,
+              short int len_of_encoding,
+              encoding_struct* encoding_matrix);
 
-    void write_file(std::string filename);
+    void write_file();
     void write_metadata();
     void write_basic_metadata();
     void write_encoding_metadata();

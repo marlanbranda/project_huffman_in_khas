@@ -493,7 +493,7 @@ void test13(){
 };
 
 void test14(){
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-9-15.pgm"; // NOLINT(*-raw-string-literal)
     pgmReader pgmObj = pgmReader(filename);
     freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
     binaryTree binaryTreeObj = binaryTree(&freqObj);
@@ -518,3 +518,45 @@ void test14(){
     }
 
 }
+
+void test15(){
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-9-15.pgm"; // NOLINT(*-raw-string-literal)
+    pgmReader pgmObj = pgmReader(filename);
+    freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
+    linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
+    encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
+
+//    std::cout << pgmObj.width << std::endl;
+//    std::cout << pgmObj.height << std::endl;
+
+    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test15.hek"; // NOLINT(*-raw-string-literal)
+    hekWriter hekWriterObj = hekWriter(hek_file_name,
+                                       (short int)pgmObj.width,
+                                       (short int)pgmObj.height,
+                                       (short int)leaf_nodes->length(),
+                                       encoding_matrix);
+
+    std::ifstream hek_file_read(hek_file_name, std::ios::binary);
+    char temp;
+    short int tempint;
+
+    hek_file_read.read((char*)&tempint, sizeof(short int));
+    std::cout << tempint << std::endl;
+
+    hek_file_read.read((char*)&tempint, sizeof(short int));
+    std::cout << tempint << std::endl;
+
+    hek_file_read.read(&temp, sizeof(char));
+    std::cout << temp << std::endl;
+
+    hek_file_read.read((char*)&tempint, sizeof(short int));
+    std::cout << tempint << std::endl;
+
+    hek_file_read.read(&temp, sizeof(char));
+    std::cout << (int)(unsigned char)temp << std::endl;
+
+    hek_file_read.read(&temp, sizeof(char));
+    std::cout << (int)(unsigned char)temp << std::endl;
+
+};

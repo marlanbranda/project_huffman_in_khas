@@ -28,6 +28,7 @@ void test11();
 void test12();
 void test13();
 void test14();
+void test15();
 
 
 #endif //PROJECT_HUFFMAN_IN_KHAS_TESTS_H
