@@ -696,9 +696,9 @@ void test17(){
     encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
 
     // encoding table we derive from the pgm file
-    for(int i=0; i<leaf_nodes->length();i++) {
-        encoding_matrix[i].print_encoding_struct();
-    }
+//    for(int i=0; i<leaf_nodes->length();i++) {
+//        encoding_matrix[i].print_encoding_struct();
+//    }
 
     std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test15.hek"; // NOLINT(*-raw-string-literal)
     hekWriter hekWriterObj = hekWriter(hek_file_name,
@@ -708,17 +708,6 @@ void test17(){
                                        encoding_matrix,
                                        pgmObj.data_size,
                                        pgmObj.data_as_array() );
-
-
-
-
-
-
-
-
-
-
-
 
 
 //     hek writer COUT firts two binary encoding
@@ -734,12 +723,21 @@ void test17(){
 //    std::cout << "\n\n\n\n\n\n\n\n";
 //
     // pgm file data stream
+
+
+
     char* data_stream = pgmObj.data_as_array();
     for(int i=0; i<20; i++)
     {
         std::cout << (int)(unsigned char)data_stream[i] << ' ';
     }
 
+    std::cout << '\n';
+
+    for(int i=0; i<20; i++)
+    {
+        std::cout << (int)(unsigned char)hekReaderObj.data_stream[i] << ' ';
+    }
 
 
     // hek_reader decoded char stream

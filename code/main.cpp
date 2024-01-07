@@ -25,15 +25,4 @@ int main(int argc, char *argv[])
 //    treeNode* root = binaryTreeObj.root;
 
     test17();
-
-    /*
-     * PSEUDO CODE
-     *
-     * unique_arr = freqTable.unique_array
-     *
-     *
-     *
-     *
-     */
-
 }

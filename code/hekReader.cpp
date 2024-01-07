@@ -106,9 +106,9 @@ void hekReader::read_hek(std::string hek_file_name) {
     hek_file_read.close();
 
     //
-    for(int i=0; i<1; i++) {
-        std::cout << (int)(unsigned int)data_encoded[0] << std::endl;
-    }
+//    for(int i=0; i<1; i++) {
+//        std::cout << (int)(unsigned int)data_encoded[0] << std::endl;
+//    }
 
 
     std::string buffer;
@@ -141,8 +141,6 @@ void hekReader::read_hek(std::string hek_file_name) {
                 if(encoding_matrix[j].binary_encoding == buffer)
                 {
                     data_stream += encoding_matrix[j].symbol;
-                    std::cout << "this is buffer : " << buffer << std::endl;
-
                     buffer.clear();
                     break;
                 }
@@ -154,6 +152,7 @@ void hekReader::read_hek(std::string hek_file_name) {
 
         }while(!buffer.empty());
     }
+    this->data_stream = data_stream;
 
 
 }

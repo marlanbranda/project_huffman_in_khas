@@ -19,6 +19,7 @@ public:
     int encoding_len;
     encoding_struct* encoding_matrix;
     int data_size;
+    std::string data_stream;
 
     hekReader();
 
