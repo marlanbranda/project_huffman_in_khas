@@ -520,7 +520,7 @@ void test14(){
 }
 
 void test15(){
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-9-15.pgm"; // NOLINT(*-raw-string-literal)
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36.pgm"; // NOLINT(*-raw-string-literal)
     pgmReader pgmObj = pgmReader(filename);
     freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
     binaryTree binaryTreeObj = binaryTree(&freqObj);
@@ -535,7 +535,9 @@ void test15(){
                                        (short int)pgmObj.width,
                                        (short int)pgmObj.height,
                                        (short int)leaf_nodes->length(),
-                                       encoding_matrix);
+                                       encoding_matrix,
+                                       pgmObj.data_size,
+                                       pgmObj.data_as_array() );
 
     std::ifstream hek_file_read(hek_file_name, std::ios::binary);
     char temp;

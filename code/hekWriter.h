@@ -40,7 +40,9 @@ public:
               short int width,
               short int height,
               short int len_of_encoding,
-              encoding_struct* encoding_matrix);
+              encoding_struct* encoding_matrix,
+              int data_size,
+              char* data_stream);
 
     void write_file();
     void write_metadata();
