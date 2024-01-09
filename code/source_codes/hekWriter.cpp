@@ -1,4 +1,4 @@
-#include "header_files/hekWriter.h"
+#include "../header_files/hekWriter.h"
 
 
 hekWriter::hekWriter(std::string &filename,
@@ -123,5 +123,8 @@ hekWriter::hekWriter(std::string &filename,
         file.seekp(4); // 5th byte is padding byte;
         file.write(&padding_byte, sizeof(char));
     }
+
+    file.seekp(0, std::ios::end);
+    this->output_file_size = file.tellp();
 
 }

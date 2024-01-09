@@ -1,4 +1,4 @@
-#include "header_files/freqTable.h"
+#include "../header_files/freqTable.h"
 
 #include <iostream>
 

@@ -1,4 +1,4 @@
-#include "header_files/treeNode.h"
+#include "../header_files/treeNode.h"
 
 treeNode::treeNode(int freq, char symbol) {
     this->freq = freq;

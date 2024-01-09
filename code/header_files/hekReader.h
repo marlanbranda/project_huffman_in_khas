@@ -10,6 +10,8 @@ public:
     std::string hek_file_name;
     std::string pgm_file_name;
 
+    long long int hek_file_size;
+
     int width{};
     int height{};
     int max_gray; // constant

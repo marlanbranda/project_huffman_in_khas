@@ -27,6 +27,7 @@
 class hekWriter {
 public:
     std::string filename;
+    long long int output_file_size;
 
     char padding_byte; // defunct now
 

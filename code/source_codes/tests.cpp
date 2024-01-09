@@ -1,9 +1,16 @@
-#include "header_files/tests.h"
+#include "../header_files/tests.h"
+
+/*
+ * TEST 1: this test prints whether pgmReader correctly parses the metadata
+ *         also prints all file char by char to check if there is problem in
+ *         data_as_array() and data_size members of pgmReader
+ */
 
 void test1(){
+
     // read the file
     std::cout << "emre" << std::endl;
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm"; // NOLINT(*-raw-string-literal)
 //    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\screenshot.png";
 
     pgmReader pgmObj = pgmReader(filename);
@@ -22,10 +29,14 @@ void test1(){
 
 }
 
+/*
+ * TEST 2: I made some experiment on type casting between c types
+ */
+
 void test2(){
     char ch1 = 'º';
-    char ch2 = 'Ñ'; // overflowing happens these are all two bytes in utf8
-    char ch3 = 'ö';
+    char ch2 = 'Ñ'; // overflowing happens in all three bytes
+    char ch3 = 'ö'; // because they are represented with two bytes by utf-8
 
     char _trial1 = '~'; // 126 as expected
     char _trial2 = ' ' + '_'; // 32+95=127 as expected
@@ -46,23 +57,17 @@ void test2(){
     std::cout << (int)(unsigned char)ch3 << std::endl;
 }
 
+/*
+ * TEST 3: I turn te every char to value between [0-255], just to preparation for freqTable
+ */
 void test3(){
-    // read the file
-    std::cout << "emre" << std::endl;
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
-//    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\screenshot.png";
 
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm"; // NOLINT(*-raw-string-literal)
     pgmReader pgmObj = pgmReader(filename);
-
-    std::cout << "width:    " << pgmObj.width << std::endl;
-    std::cout << "height:   " << pgmObj.height << std::endl;
-    std::cout << "max_gray: " << pgmObj.max_gray << std::endl;
-    std::cout << "data:     " << pgmObj.data << std::endl;
-    std::cout << "data_size:" << pgmObj.data_size << std::endl;
 
     char* bytestream = pgmObj.data_as_array();
 
-    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\data_stream.txt";
+    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test3_data_stream.txt";
     std::fstream txt_file;
     txt_file.open(txt_file_path, std::ios::out);
     if(!txt_file.is_open()){
@@ -75,21 +80,21 @@ void test3(){
         int num = (int) ch;
         txt_file << num << "\n";
     }
-
 }
 
+/*
+ * TEST 4: let you see the freqTable, chars and their frequency in one line
+ */
 void test4(){
 
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
-
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm"; // NOLINT(*-raw-string-literal)
     pgmReader pgmObj = pgmReader(filename);
-
     char* bytestream = pgmObj.data_as_array();
 
     freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
 
 
-    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\freq_array.txt";
+    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test4_freq_array.txt";
     std::fstream txt_file;
     txt_file.open(txt_file_path, std::ios::out);
     if(!txt_file.is_open()){
@@ -107,7 +112,9 @@ void test4(){
     }
 }
 
-
+/*
+ * TEST 5: expansion to test3, I test if casting backwards also works
+ */
 void test5() {
 
     char ch1, ch2, ch3;
@@ -147,16 +154,19 @@ void test5() {
 
 }
 
+/*
+ * TEST 6: other members of freqTable
+ */
 void test6(){
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
-
+    std::string filename =
+            "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm";
     pgmReader pgmObj = pgmReader(filename);
-
     char* bytestream = pgmObj.data_as_array();
 
     freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
 
-    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_6.txt";
+    std::string txt_file_path =
+            "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test6_freqTable.txt";
     std::fstream txt_file;
     txt_file.open(txt_file_path, std::ios::out | std::ios::binary);
     if(!txt_file.is_open()){
@@ -170,115 +180,78 @@ void test6(){
         txt_file.write(&ch, sizeof(char));
         txt_file.write("\n", sizeof(char));
     }
-
-}
-
-void test7(){
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
-
-    pgmReader pgmObj = pgmReader(filename);
-
-    char* bytestream = pgmObj.data_as_array();
-
-    freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
-
-    binaryTree binaryTreeObj = binaryTree(&freqObj);
-
-    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\bTree_leaf_nodes.txt";
-    std::fstream txt_file;
-    txt_file.open(txt_file_path, std::ios::out);
-    if(!txt_file.is_open()){
-        std::cerr << "file is not open";
-    }
-
-    if(binaryTreeObj.leaf_nodes != nullptr) {
-        linkedNode* elem = binaryTreeObj.leaf_nodes;
-
-        for(int i=0; ; i++) {
-            txt_file << "elem " << i << " of linked node freq:      " << elem->dataNode->freq << std::endl;
-            txt_file << "elem " << i << " of linked node symbol:    " << (int)(unsigned char)elem->dataNode->symbol << std::endl;
-            if(elem->next != nullptr) {
-                elem = elem->next;
-            }
-            else
-                break;
-        }
-
-    }
-}
-
-void test8(){
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
-
-    pgmReader pgmObj = pgmReader(filename);
-
-    char* bytestream = pgmObj.data_as_array();
-
-    freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
-
-    binaryTree binaryTreeObj = binaryTree(&freqObj);
-
-    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\replace_w_parent.txt";
-    std::fstream txt_file;
-    txt_file.open(txt_file_path, std::ios::out);
-    if(!txt_file.is_open()){
-        std::cerr << "file is not open";
-    }
-
-    if(binaryTreeObj.leaf_nodes != nullptr) {
-        linkedNode* elem = binaryTreeObj.leaf_nodes;
-
-        auto parentNode = binaryTreeObj.replace_with_parent(elem, elem->next);
-
-        elem = parentNode;
-        elem = elem->head();
-
-        for(int i=0; ; i++) {
-            txt_file << "elem " << i << " of linked node freq:      " << elem->dataNode->freq << std::endl;
-            txt_file << "elem " << i << " of linked node symbol:    " << (int)(unsigned char)elem->dataNode->symbol << std::endl;
-            if(elem->next != nullptr) {
-                elem = elem->next;
-            }
-            else
-                break;
-        }
-
-    }
-    else
-        std::cout << "leaf_nodes returned nullptr";
 }
 
 /*
- * THIS TEST IS DEFUNCT
+ * TEST 7: leaf_node object of binaryTree if its parallel with freqTable
  */
-// this test will provide a visual way to see encodings of chars
-// which will be created by encoding_matrix in binaryTree class
-void test9(){
-
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
-
+void test7(){
+    std::string filename =
+            "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm"; // NOLINT(*-raw-string-literal)
     pgmReader pgmObj = pgmReader(filename);
-
     char* bytestream = pgmObj.data_as_array();
 
     freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
 
     binaryTree binaryTreeObj = binaryTree(&freqObj);
 
-    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\encoding_matrix.txt";
+    std::string txt_file_path =
+            "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test7_leaf_nodes.txt";
     std::fstream txt_file;
-    txt_file.open(txt_file_path, std::ios::out | std::ios::binary);
+    txt_file.open(txt_file_path, std::ios::out);
     if(!txt_file.is_open()){
         std::cerr << "file is not open";
     }
 
-//    for(int i=0; i < 5 ; i++) {
-//
-//        txt_file << binaryTreeObj.encoding_matrix[i][0] << binaryTreeObj.encoding_matrix[i][1] << std::endl;
-//        std::cout << "dummy";
-//    }
+    if(binaryTreeObj.leaf_nodes != nullptr) {
+        linkedNode* elem = binaryTreeObj.leaf_nodes;
+
+        for(int i=0; ; i++) {
+            txt_file << "elem " << i << " of linked node freq:      " << elem->dataNode->freq << std::endl;
+            txt_file << "elem " << i << " of linked node symbol:    " << (int)(unsigned char)elem->dataNode->symbol << std::endl;
+            if(elem->next != nullptr) {
+                elem = elem->next;
+            }
+            else
+                break;
+        }
+
+    }
 }
 
+/*
+ * TEST 9: this test will provide a visual way to see encodings of chars
+ *         which will be created by encoding_matrix in binaryTree class
+ */
+void test9(){
+
+    std::string filename =
+            "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm"; // NOLINT(*-raw-string-literal)
+    pgmReader pgmObj = pgmReader(filename);
+    char* bytestream = pgmObj.data_as_array();
+
+    freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
+
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
+
+    std::string txt_file_path =
+            "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test9_encoding_matrix.txt";
+    std::fstream txt_file;
+    txt_file.open(txt_file_path, std::ios::out);
+    if(!txt_file.is_open()){
+        std::cerr << "file is not open";
+    }
+
+    for(int i=0; i < 5 ; i++) {
+        txt_file << binaryTreeObj.encoding_matrix[i].symbol << "\t" << binaryTreeObj.encoding_matrix[i].binary_encoding << std::endl;
+    }
+}
+
+
+/*
+ * TEST 10: here I create linkedNodeList manually to test
+ *          and visually see if swap functions works properly
+ */
 void test10(){
 
     linkedNode* currLN = new linkedNode;
@@ -294,9 +267,7 @@ void test10(){
     }
     currLN = currLN->head();
 
-
-
-
+    // PRINTING BEFORE MANIPULATION
     for(int i=0; ; i++) {
         std::cout << currLN << "(" << currLN->prev << ", " << currLN->dataNode->freq << ", " << currLN->next << ")" << std::endl;
         if(currLN->next != nullptr) {
@@ -321,7 +292,10 @@ void test10(){
     emre->swap(foreigner);
 
     currLN = currLN->head();
+
     std::cout << std::endl << std::endl << std::endl;
+
+    // PRINTING AFTER MANIPULATION
     for(int i=0; ; i++) {
         std::cout << currLN << " (" << currLN->prev << ", " << currLN->dataNode->freq << ", " << currLN->next << ")" << std::endl;
         if(currLN->next != nullptr) {
@@ -333,6 +307,11 @@ void test10(){
     }
 };
 
+/*
+ * TEST 11: prototype of sort_at_least_two
+ *          starting linkedListNode with random value treeNodes
+ *          then taking least amount into start of list
+ */
 void test11(){
 
     linkedNode* currLN = new linkedNode;
@@ -351,9 +330,6 @@ void test11(){
         nextLN->dataNode = new treeNode(dist30(rng), (char)(i+97) );
     }
     currLN = currLN->head();
-
-
-
 
     for(int i=0; ; i++) {
         std::cout << currLN << "(" << currLN->prev << ", " << currLN->dataNode->freq << ", " << currLN->next << ")" << std::endl;
@@ -395,7 +371,11 @@ void test11(){
     }
 };
 
-
+/*
+ * TEST 12: sorting the least two then creating parent node of them
+ *          then removing the second element
+ *          only for one time
+ */
 void test12(){
 
     linkedNode* currLN = new linkedNode;
@@ -464,6 +444,13 @@ void test12(){
 
 };
 
+
+/*
+ * TEST 13: sorting the least two then creating parent node of them
+ *          then removing the second element
+ *          recursively to build tree and find the root
+ *          printing at every parenting stage to closely watch progress
+ */
 void test13(){
 
     linkedNode* currLN = create_dummy_linked_node();
@@ -492,19 +479,29 @@ void test13(){
 
 };
 
+/*
+ * TEST 14: sorting the least two then creating parent node of them
+ *          then removing the second element
+ *          recursively to build tree and find the root
+ *          printing at every parenting stage to closely watch progress
+ */
 void test14(){
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-9-15.pgm"; // NOLINT(*-raw-string-literal)
+    std::string filename =
+            "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm"; // NOLINT(*-raw-string-literal)
     pgmReader pgmObj = pgmReader(filename);
-    freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
-    binaryTree binaryTreeObj = binaryTree(&freqObj);
+    char* bytestream = pgmObj.data_as_array();
 
+    freqTable freqObj = freqTable(bytestream, pgmObj.data_size);
+
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
     linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
     treeNode* root = binaryTreeObj.root;
     encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
 
-    std::string txt_file_path = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\encoding_matrix.txt";
+    std::string txt_file_path =
+            "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test14_bCodes_from_leaf_nodes.txt";
     std::fstream txt_file;
-    txt_file.open(txt_file_path, std::ios::out | std::ios::binary);
+    txt_file.open(txt_file_path, std::ios::out);
     if(!txt_file.is_open()){
         std::cerr << "file is not open";
     }
@@ -519,6 +516,11 @@ void test14(){
 
 }
 
+/*
+ * TEST 15: experimentation with bitwise operations
+ *          as it would be crucial to both encoding and decoding
+ *          variable lenght compressed data
+ */
 void test15(){
 
     std::string str;
@@ -536,95 +538,23 @@ void test15(){
 
     std::cout << str;
 
-    std::cout << std::endl << std::endl << std::endl;
-
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36.pgm"; // NOLINT(*-raw-string-literal)
-    pgmReader pgmObj = pgmReader(filename);
-    freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
-    binaryTree binaryTreeObj = binaryTree(&freqObj);
-    linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
-    encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
-
-//    std::cout << pgmObj.width << std::endl;
-//    std::cout << pgmObj.height << std::endl;
-
-    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test15.hek"; // NOLINT(*-raw-string-literal)
-    hekWriter hekWriterObj = hekWriter(hek_file_name,
-                                       (short int)pgmObj.width,
-                                       (short int)pgmObj.height,
-                                       (short int)leaf_nodes->length(),
-                                       encoding_matrix,
-                                       pgmObj.data_size,
-                                       pgmObj.data_as_array() );
-
-    // hek writer cout firts two binary encoding
-    std::ifstream hek_file_read(hek_file_name, std::ios::binary);
-    char temp;
-    short int tempint;
-
-    // width
-    hek_file_read.read((char*)&tempint, sizeof(short int));
-    std::cout << tempint << std::endl;
-
-    // height
-    hek_file_read.read((char*)&tempint, sizeof(short int));
-    std::cout << tempint << std::endl;
-
-    // padding
-    hek_file_read.read(&temp, sizeof(char));
-    std::cout << temp << std::endl;
-
-    //encoding len
-    hek_file_read.read((char*)&tempint, sizeof(short int));
-    std::cout << "encoding len ;"<<tempint << std::endl;
-
-    for(int i=0; i<10; i++)
-    {    // symbol
-        hek_file_read.read(&temp, sizeof(char));
-        std::cout << (int) (unsigned char) temp << " symbol" << std::endl;
-
-        // len of binary encoding
-        hek_file_read.read(&temp, sizeof(char));
-        std::cout << (int) (unsigned char) temp << " len of bincoding " << std::endl;
-
-        for (int k=(int)(unsigned char)temp; k > 0;) {
-            hek_file_read.read(&temp, sizeof(char));
-            std::cout << (int) (unsigned char) temp << std::endl;
-            k -= 8;
-        }
-    }
-
-
-
 };
 
+/*
+ * TEST 16: wrote some code to parse from .hek file,
+ *          I am testing if I get same results inside and outside the class method
+ *          Additionally I test if the loop parses in correct way encoding table
+ */
 void test16(){
 
-    std::string str;
-    char byte = 0b01010101;
-    unsigned char mask = 0b10000000;
-    for (int k = 0; k < 8; k++) {
-        if (byte & mask) {
-            str += '1';
-        }else{
-            str += '0';
-        }
-
-        mask >>= 1;
-    }
-
-    std::cout << str;
-
-    std::cout << std::endl << std::endl << std::endl;
-
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36.pgm"; // NOLINT(*-raw-string-literal)
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm"; // NOLINT(*-raw-string-literal)
     pgmReader pgmObj = pgmReader(filename);
     freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
     binaryTree binaryTreeObj = binaryTree(&freqObj);
     linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
     encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
 
-    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test15.hek"; // NOLINT(*-raw-string-literal)
+    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test16_first_hek.hek"; // NOLINT(*-raw-string-literal)
     hekWriter hekWriterObj = hekWriter(hek_file_name,
                                        (short int)pgmObj.width,
                                        (short int)pgmObj.height,
@@ -686,21 +616,19 @@ void test16(){
 
 };
 
-
+/*
+ * TEST 17: comparing the data and encodings derived from reading pgm file and hek file
+ *
+ */
 void test17(){
-    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36.pgm"; // NOLINT(*-raw-string-literal)
+    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm"; // NOLINT(*-raw-string-literal)
     pgmReader pgmObj = pgmReader(filename);
     freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
     binaryTree binaryTreeObj = binaryTree(&freqObj);
     linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
     encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
 
-//     encoding table we derive from the pgm file
-    for(int i=0; i<leaf_nodes->length();i++) {
-        encoding_matrix[i].print_encoding_struct();
-    }
-
-    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test15.hek"; // NOLINT(*-raw-string-literal)
+    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test17_compressed_file.hek"; // NOLINT(*-raw-string-literal)
     hekWriter hekWriterObj = hekWriter(hek_file_name,
                                        (short int)pgmObj.width,
                                        (short int)pgmObj.height,
@@ -709,35 +637,11 @@ void test17(){
                                        pgmObj.data_size,
                                        pgmObj.data_as_array() );
 
-
-//     hek writer COUT firts two binary encoding
-
-
     std::ifstream hek_file_read(hek_file_name, std::ios::binary);
 
     hekReader hekReaderObj = hekReader();
 
-    // COUT!! hek reader couts firts ten elements of binary encoding
     hekReaderObj.read_hek(hek_file_name);
-//
-//    std::cout << "\n\n\n\n\n\n\n\n";
-//
-    // pgm file data stream
-
-
-
-//    char* data_stream = pgmObj.data_as_array();
-//    for(int i=0; i<pgmObj.data_size; i++)
-//    {
-//        std::cout << (int)(unsigned char)data_stream[i] << ' ';
-//    }
-
-//    std::cout << '\n';
-
-//    for(int i=37000; i<pgmObj.data_size - 1 ; i++)
-//    {
-//        std::cout << i << '\t' <<(int)(unsigned char)hekReaderObj.data_stream[i] << '\n';
-//    }
 
     int Tcount = 0;
     int Fcount = 0;
@@ -757,36 +661,38 @@ void test17(){
         }
 
     }
-    std::cout << "False count : " << Fcount << "\t" << "True count: " << Tcount;
+    std::cout << "\n\n comparing the data_streams of pgmReader and hekReader \n";
+    std::cout << "False count : " << Fcount << "\t" << "True count: " << Tcount << "\n \n";
 
 
 //    encoding data is truly transferred
-//    int Tcount = 0;
-//    int Fcount = 0;
-//
-//    char* data_stream = pgmObj.data_as_array();
-//    for(int i=0; i<leaf_nodes->length(); i++)
-//    {
+    Tcount = 0;
+    Fcount = 0;
+
+    data_stream = pgmObj.data_as_array();
+    for(int i=0; i<leaf_nodes->length(); i++)
+    {
 //        encoding_matrix[i].print_encoding_struct();
 //        std::cout << '\t';
 //        hekReaderObj.encoding_matrix[i].print_encoding_struct();
-//
-//        if(encoding_matrix[i].symbol == hekReaderObj.encoding_matrix[i].symbol
-//            && encoding_matrix[i].binary_encoding == hekReaderObj.encoding_matrix[i].binary_encoding){
-//            Tcount++;
-//        }else{
-//            Fcount++;
-//        }
-//
-//    }
-//    std::cout << "False count : " << Fcount << "\t" << "True count: " << Tcount;
+
+        if(encoding_matrix[i].symbol == hekReaderObj.encoding_matrix[i].symbol
+            && encoding_matrix[i].binary_encoding == hekReaderObj.encoding_matrix[i].binary_encoding){
+            Tcount++;
+        }else{
+            Fcount++;
+        }
+
+    }
+    std::cout << "\n\n comparing the encoding tables of pgmReader and hekReader \n";
+    std::cout << "False count : " << Fcount << "\t" << "True count: " << Tcount;
 
 };
 
 void test18(){
-    std::string pgm_filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36.pgm"; // NOLINT(*-raw-string-literal)
-    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36_compressed.hek"; // NOLINT(*-raw-string-literal)
-    std::string pgm_output = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36_decompressed.pgm"; // NOLINT(*-raw-string-literal)
+    std::string pgm_filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_image1.pgm"; // NOLINT(*-raw-string-literal)
+    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test18_compressed_file.hek"; // NOLINT(*-raw-string-literal)
+    std::string pgm_output = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test_outputs\\output_test18_decompressed.pgm"; // NOLINT(*-raw-string-literal)
 
     pgmReader pgmObj = pgmReader(pgm_filename);
     freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);

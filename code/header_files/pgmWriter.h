@@ -13,6 +13,7 @@ public:
     int width;
     int height;
     int max_gray;
+    long long int pgm_file_size;
 
     pgmWriter(hekReader* hekReaderObj, std::string filename);
 

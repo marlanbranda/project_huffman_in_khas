@@ -1,7 +1,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshadow"
 
-#include "header_files/hekReader.h"
+#include "../header_files/hekReader.h"
 
 
 hekReader::hekReader() {
@@ -11,6 +11,16 @@ hekReader::hekReader() {
 
 void hekReader::read_hek(const std::string& hek_file_name) {
     std::ifstream hek_file_read(hek_file_name, std::ios::binary);
+    if(!hek_file_read.is_open()){
+        throw std::runtime_error("pgm file can not be opened");
+    }
+
+    hek_file_read.seekg(0, std::ios::end);
+
+    this->hek_file_size =  hek_file_read.tellg();
+
+    hek_file_read.seekg(0);
+
     char temp;
     short int tempint;
 

@@ -1,5 +1,5 @@
-#include "header_files/pgmReader.h"
-#include "header_files/miscellaneous.h"
+#include "../header_files/pgmReader.h"
+#include "../header_files/miscellaneous.h"
 
 pgmReader::pgmReader(const std::string& filename) { // NOLINT(*-pro-type-member-init)
 

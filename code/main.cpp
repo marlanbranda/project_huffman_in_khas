@@ -1,5 +1,4 @@
 #include <iostream>
-#include <bitset>
 
 #include "header_files/tests.h"
 
@@ -12,25 +11,22 @@
 #include "header_files/miscellaneous.h"
 
 
-int main(int argc, char *argv[])
-{
-    try
-    {
-        if (argc != 3) {
-            throw std::logic_error("Usage1: compress input_file.pgm output_file.hek \n"
-                                   "Usage2: decompress input_file.hek output_file.pgm");
-        }
-        else
-        {
-
-        }
-    }
-    catch(std::exception &err)
-    {
-        std::cerr << err.what() << "\n";
-        return 1;
-    }
-
-
-
+int main(){
+//    test1();
+//    test2();
+//    test3();
+//    test4();
+//    test5();
+//    test6();
+//    test7();
+//    test9();
+//    test10();
+//    test11();
+//    test12();
+//    test13();
+//    test14();
+//    test15();
+//    test16();
+//    test17();
+//    test18();
 }

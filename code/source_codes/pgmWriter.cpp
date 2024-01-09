@@ -1,4 +1,4 @@
-#include "header_files/pgmWriter.h"
+#include "../header_files/pgmWriter.h"
 
 pgmWriter::pgmWriter(hekReader* hekReaderObj, std::string filename) {
     this->max_gray = 255;
@@ -12,7 +12,7 @@ pgmWriter::pgmWriter(hekReader* hekReaderObj, std::string filename) {
         throw std::runtime_error("pgm file can not be opened");
     }
 
-    file << "P5\n" << this->width << '\n' << this->height << '\n'  << this->max_gray << '\n';
+    file << "P5\n" << this->width << ' ' << this->height << '\n'  << this->max_gray << '\n';
 
     for(int i=0; i<hekReaderObj->data_size; i++)
     {
@@ -20,10 +20,5 @@ pgmWriter::pgmWriter(hekReader* hekReaderObj, std::string filename) {
         file.write(&temp_char, sizeof(char));
     }
 
-
-//    for()
-//    {
-//
-//        file.write();
-//    }
+    this->pgm_file_size = file.tellp();
 }
