@@ -11,6 +11,7 @@
 #include "treeNode.h"
 #include "hekWriter.h"
 #include "hekReader.h"
+#include "pgmWriter.h"
 #include "miscellaneous.h"
 
 
@@ -31,6 +32,7 @@ void test14();
 void test15();
 void test16();
 void test17();
+void test18();
 
 
 #endif //PROJECT_HUFFMAN_IN_KHAS_TESTS_H

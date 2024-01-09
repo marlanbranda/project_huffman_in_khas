@@ -1,12 +1,11 @@
-#include "pgmReader.h"
-#include "miscellaneous.h"
+#include "header_files/pgmReader.h"
+#include "header_files/miscellaneous.h"
 
 pgmReader::pgmReader(const std::string& filename) { // NOLINT(*-pro-type-member-init)
 
     this->filename = filename;
     std::ifstream file;
     file.open(filename, std::ifstream::in | std::ifstream::binary);
-
 
     if(!file.is_open()){
         throw std::runtime_error("pgm file can not be opened");
@@ -23,6 +22,8 @@ pgmReader::pgmReader(const std::string& filename) { // NOLINT(*-pro-type-member-
     // parse width, height and maxgray
     std::string str[3];
     file.seekg(3);
+
+    // this part gets every line into string array in metadata
     int k = 0;
     for(int i=0; i<50; i++){
         char ch;
@@ -49,12 +50,12 @@ pgmReader::pgmReader(const std::string& filename) { // NOLINT(*-pro-type-member-
 
     // file size minus metadata
     this->data_size = (int)(end - data);
+    this->data_stream = new char[this->data_size];
 
     file.close();
 }
 
 char* pgmReader::data_as_array() const {
-    char* data_stream = new char[this->data_size];
 
     std::ifstream file;
     file.open(this->filename, std::ifstream::in | std::ifstream::binary);
@@ -62,7 +63,10 @@ char* pgmReader::data_as_array() const {
     file.read(data_stream, data_size);
     file.close();
 
-    return data_stream;
+    return this->data_stream;
 }
 
-pgmReader::~pgmReader() = default;
+pgmReader::~pgmReader(){
+    delete[] this->data_stream;
+    data_stream = nullptr;
+};

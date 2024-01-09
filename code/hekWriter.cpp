@@ -1,4 +1,4 @@
-#include "hekWriter.h"
+#include "header_files/hekWriter.h"
 
 
 hekWriter::hekWriter(std::string &filename,
@@ -81,7 +81,7 @@ hekWriter::hekWriter(std::string &filename,
         buffer.append(bin_str);
         while(buffer.length() >= 8) {
             short int pos = 0;
-            char byte = 0b00000000;
+            char byte =          0b00000000;
             unsigned char mask = 0b10000000;
             for (int k = 0; k < 8; k++) {
                 if (buffer[k] != '0') {
@@ -97,8 +97,6 @@ hekWriter::hekWriter(std::string &filename,
 
 
     // padding will now has to be calculated
-
-
     // last things in the buffer will be written
     short int pos = 0;
     char byte = 0b00000000;
@@ -119,6 +117,11 @@ hekWriter::hekWriter(std::string &filename,
     }
     if(pos!=0) {
         file.write(&byte, sizeof(char));
+
+        // padding value should be extracted with (int)(unsigned char)
+        this->padding_byte = (char)(unsigned char)(8 - pos);
+        file.seekp(4); // 5th byte is padding byte;
+        file.write(&padding_byte, sizeof(char));
     }
 
 }

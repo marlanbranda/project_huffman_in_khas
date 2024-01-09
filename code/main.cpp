@@ -1,28 +1,36 @@
 #include <iostream>
 #include <bitset>
 
-#include "tests.h"
+#include "header_files/tests.h"
 
-#include "pgmReader.h"
-#include "freqTable.h"
-#include "treeNode.h"
-#include "hekWriter.h"
-#include "hekReader.h"
-#include "miscellaneous.h"
+#include "header_files/pgmReader.h"
+#include "header_files/freqTable.h"
+#include "header_files/treeNode.h"
+#include "header_files/hekWriter.h"
+#include "header_files/hekReader.h"
+#include "header_files/pgmWriter.h"
+#include "header_files/miscellaneous.h"
 
 
 int main(int argc, char *argv[])
 {
-//    std::string filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-8-13.pgm"; // NOLINT(*-raw-string-literal)
-//
-//    pgmReader pgmObj = pgmReader(filename);
-//
-//    freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
-//
-//    binaryTree binaryTreeObj = binaryTree(&freqObj);
-//
-//    linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
-//    treeNode* root = binaryTreeObj.root;
+    try
+    {
+        if (argc != 3) {
+            throw std::logic_error("Usage1: compress input_file.pgm output_file.hek \n"
+                                   "Usage2: decompress input_file.hek output_file.pgm");
+        }
+        else
+        {
 
-    test17();
+        }
+    }
+    catch(std::exception &err)
+    {
+        std::cerr << err.what() << "\n";
+        return 1;
+    }
+
+
+
 }

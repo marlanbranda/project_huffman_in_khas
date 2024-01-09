@@ -1,18 +1,18 @@
-#include "hekReader.h"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshadow"
+
+#include "header_files/hekReader.h"
 
 
 hekReader::hekReader() {
-    char magic_number[3] = "P5";
-    this->magic_number = magic_number;
     this->max_gray = 255;
 
 }
 
-void hekReader::read_hek(std::string hek_file_name) {
+void hekReader::read_hek(const std::string& hek_file_name) {
     std::ifstream hek_file_read(hek_file_name, std::ios::binary);
     char temp;
     short int tempint;
-
 
     /*
      *
@@ -36,9 +36,9 @@ void hekReader::read_hek(std::string hek_file_name) {
     hek_file_read.read((char*)&tempint, sizeof(short int));
     this->encoding_len = tempint;
 
-    this->encoding_matrix = new encoding_struct[encoding_len]; // TODO CHANGE THIS TO ENCODING LEN
+    this->encoding_matrix = new encoding_struct[encoding_len];
 
-    for(int i=0; i<encoding_len; i++) // TODO CHANGE THIS TO ENCODING LEN
+    for(int i=0; i<encoding_len; i++)
     {
         // symbol
         hek_file_read.read(&temp, sizeof(char));
@@ -77,11 +77,6 @@ void hekReader::read_hek(std::string hek_file_name) {
         }
     }
 
-//    for(int i=0; i<encoding_len; i++)
-//    {
-//        encoding_matrix[i].print_encoding_struct();
-//    }
-
     /*
      *
      * HERE WE READ DATA
@@ -89,52 +84,35 @@ void hekReader::read_hek(std::string hek_file_name) {
      */
 
     std::streampos curr = hek_file_read.tellg();
-
     hek_file_read.seekg(0, std::ios::end);
     std::streampos end = hek_file_read.tellg();
 
     hek_file_read.seekg(curr);
 
-    int data_stream_len = int(end) - int(curr);
+    int data_encoded_len = int(end) - int(curr);
+    char* data_encoded = new char[data_encoded_len];
+
+    hek_file_read.read(data_encoded, sizeof(char) * data_encoded_len); // NOLINT(*-narrowing-conversions)
+    hek_file_read.close();
 
 
     std::string data_stream;
-    char* data_encoded = new char[data_stream_len];
-    char* p_data_encoded = data_encoded;
-    int p_data_encoded_index = 0;
-    hek_file_read.read(data_encoded, sizeof(char) * data_stream_len);
-    hek_file_read.close();
-
-    //
-//    for(int i=0; i<1; i++) {
-//        std::cout << (int)(unsigned int)data_encoded[0] << std::endl;
-//    }
-
-
     std::string buffer;
     int pos=0;
     unsigned char mask = 0b10000000;
-
     // one char at a time
-    for(int i=0; i<encoding_len; i++){
-
-        do {
-            // encoded datadan bir bit ekle
-            if ((mask) & (*p_data_encoded)) {
+    for(int i=0; i < data_encoded_len; i++) {
+        while(pos<8)
+        {
+            // mask
+            if ((mask) & data_encoded[i]) {
                 buffer += '1';
             } else {
                 buffer += '0';
             }
+            // RSH the mask
             pos++;
             mask >>= 1;
-            if (pos == 8) {
-                pos = 0;
-                mask = 0b10000000;
-                if(p_data_encoded_index != data_stream_len - 1 ) {
-                    p_data_encoded += 1;
-                    p_data_encoded_index += 1;
-                }
-            }
 
             // check the buffer
             for(int j=0; j< encoding_len; j++){
@@ -145,20 +123,25 @@ void hekReader::read_hek(std::string hek_file_name) {
                     break;
                 }
             }
-            if(buffer.length() >= 16){
-                std::cerr << "this is buffer : " << buffer << std::endl;
-                throw std::logic_error("buffer enlarged too much");
-            }
 
-        }while(!buffer.empty());
+        }
+        pos = 0;
+        mask = 0b10000000;
+
+        if(buffer.length() >= 16){
+            std::cerr << "this is buffer : " << buffer << std::endl;
+            throw std::logic_error("buffer enlarged too much");
+        }
     }
+
     this->data_stream = data_stream;
-
-
-}
-
-void hekReader::write_pgm(std::string pgm_file_name) {
-
+    this->data_size = this->data_stream.length(); // NOLINT(*-narrowing-conversions)
 }
 
 
+hekReader::~hekReader() {
+    delete[] this->encoding_matrix;
+    this->encoding_matrix = nullptr;
+}
+
+#pragma clang diagnostic pop

@@ -1,4 +1,4 @@
-#include "treeNode.h"
+#include "header_files/treeNode.h"
 
 treeNode::treeNode(int freq, char symbol) {
     this->freq = freq;
@@ -75,15 +75,8 @@ void linkedNode::remove() {
     delete this;
 }
 
-// 0x58(null, EMR, 0x77)  0x77(0x58, UMT, 0x42) 0x42(0x77, ALI, 0x35) 0x35(0x42, VEL, 0x31) 0x31(0x35, AYS, 0x81) 0x81(0x31, HEL, null)
-// 0x58(null, EMR, 0x77)  0x77(0x58, UMT, 0x42) 0x42(0x77, ALI, 0x35) 0x35(0x42, VEL, 0x31) 0x31(0x35, AYS, 0x81) 0x81(0x31, HEL, null)
-//                        0x31(0x35, AYS, 0x81)                                             0x77(0x58, UMT, 0x42)
-
-// 0x58(null, EMR, 0x77)  0x77(0x58, AYS, 0x42) 0x42(0x77, ALI, 0x35) 0x35(0x42, VEL, 0x31) 0x31(0x35, UMT, 0x81) 0x81(0x31, HEL, null)
-
-// 0x77(0x58, UMT, 0x42)
-// 0x31(0x35, AYS, 0x81)
-
+// just swaps the datanodes inside LN objects
+// create_tree is dependent on this implementation
 void linkedNode::swap(linkedNode* param) {
     treeNode* temp = param->dataNode;
     param->dataNode = this->dataNode;
@@ -108,7 +101,6 @@ void linkedNode::sort_least_two() {
     }
 }
 
-
 void encoding_struct::print_encoding_struct() {
     std::cout << (int)(unsigned char)this->symbol << '\t' << this->binary_encoding << std::endl;
 }
@@ -119,7 +111,7 @@ binaryTree::binaryTree(freqTable* freqObj) {
     this->encoding_matrix = create_encoding_matrix();
 }
 
-
+// for each symbol and frequency creates treeNode and put it inside a linked node
 linkedNode* binaryTree::create_linked_node(freqTable* freqObj) {
 
     linkedNode* prev_leaf = nullptr;
@@ -147,6 +139,7 @@ linkedNode* binaryTree::create_linked_node(freqTable* freqObj) {
     return head_of_node;
 }
 
+// creates a deep copy
 treeNode* binaryTree::create_tree(linkedNode* linkedNodeObj) {
     linkedNode* elem_original = linkedNodeObj;
 
@@ -165,6 +158,7 @@ treeNode* binaryTree::create_tree(linkedNode* linkedNodeObj) {
         smallest_second_elem->remove();
         root = parentTreeNode;
     }
+
     return root;
 }
 
@@ -230,28 +224,32 @@ linkedNode* binaryTree::deep_copy_linked_list(linkedNode* linkedNodeObj) {
     return copy_head;
 }
 
-binaryTree::~binaryTree() {
-    delete this->leaf_nodes;
-    delete this->root;
-//    delete this->encoding_matrix;
+void binaryTree::delete_whole_tree(treeNode* root) { // NOLINT(*-no-recursion)
+    if (root == nullptr) {
+        return;
+    }
+
+    delete_whole_tree(root->left);
+    delete_whole_tree(root->right);
+    delete root;
+    root = nullptr;
 }
 
-/*
- *
- * a b c d e
- *  q c d e
- *  w c e
- *  w r
- *  t
- *
- *         t
- *     w       r
- *   q   d   c   e
- *  a b
- *
- *  a= 000
- *  b= 001
- *  c= 10
- *  d= 01
- *  e= 11
- */
+binaryTree::~binaryTree() {
+    linkedNode* currLN = this->leaf_nodes;
+    linkedNode* nextLN;
+
+    while(currLN->next != nullptr){
+        nextLN = currLN->next;
+        delete currLN;
+        currLN = nextLN;
+    }
+    delete currLN;
+    this->leaf_nodes = nullptr;
+
+    delete_whole_tree(this->root);
+
+    delete[] this->encoding_matrix;
+    this->encoding_matrix = nullptr;
+}
+

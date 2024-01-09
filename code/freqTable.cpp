@@ -1,4 +1,4 @@
-#include "freqTable.h"
+#include "header_files/freqTable.h"
 
 #include <iostream>
 
@@ -53,6 +53,15 @@ char* freqTable::create_unique_array() {
     return unique_chars;
 }
 
-freqTable::~freqTable() = default;
+freqTable::~freqTable(){
+    delete[] this->unique_array;
+    unique_array = nullptr;
 
+    for(int i=0; i<256; i++){
+        delete[] this->freq_array[i];
+        this->freq_array[i] = nullptr;
+    }
 
+    delete this->freq_array;
+    freq_array = nullptr;
+};

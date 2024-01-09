@@ -28,8 +28,7 @@ class hekWriter {
 public:
     std::string filename;
 
-    char padding_byte; // this byte will be helpful if the last byte is padded
-
+    char padding_byte; // defunct now
 
     hekWriter(std::string& filename,
               short int width,

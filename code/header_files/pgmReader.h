@@ -18,6 +18,8 @@ public:
     std::streampos data;
     int data_size;
 
+    char* data_stream;
+
     pgmReader(const std::string& filename); // NOLINT(*-explicit-constructor)
     ~pgmReader();
 

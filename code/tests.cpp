@@ -1,4 +1,4 @@
-#include "tests.h"
+#include "header_files/tests.h"
 
 void test1(){
     // read the file
@@ -695,10 +695,10 @@ void test17(){
     linkedNode* leaf_nodes = binaryTreeObj.leaf_nodes;
     encoding_struct* encoding_matrix = binaryTreeObj.encoding_matrix;
 
-    // encoding table we derive from the pgm file
-//    for(int i=0; i<leaf_nodes->length();i++) {
-//        encoding_matrix[i].print_encoding_struct();
-//    }
+//     encoding table we derive from the pgm file
+    for(int i=0; i<leaf_nodes->length();i++) {
+        encoding_matrix[i].print_encoding_struct();
+    }
 
     std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\test15.hek"; // NOLINT(*-raw-string-literal)
     hekWriter hekWriterObj = hekWriter(hek_file_name,
@@ -726,21 +726,84 @@ void test17(){
 
 
 
+//    char* data_stream = pgmObj.data_as_array();
+//    for(int i=0; i<pgmObj.data_size; i++)
+//    {
+//        std::cout << (int)(unsigned char)data_stream[i] << ' ';
+//    }
+
+//    std::cout << '\n';
+
+//    for(int i=37000; i<pgmObj.data_size - 1 ; i++)
+//    {
+//        std::cout << i << '\t' <<(int)(unsigned char)hekReaderObj.data_stream[i] << '\n';
+//    }
+
+    int Tcount = 0;
+    int Fcount = 0;
+
     char* data_stream = pgmObj.data_as_array();
-    for(int i=0; i<20; i++)
+    for(int i=0; i<pgmObj.data_size; i++)
     {
-        std::cout << (int)(unsigned char)data_stream[i] << ' ';
+//        std::cout << i + 1 << "\t";
+//        std::cout << (int)(unsigned char)data_stream[i] << ' ';
+//        std::cout << (int)(unsigned char)hekReaderObj.data_stream[i] << ' ';
+//        std::cout << '\n';
+
+        if(data_stream[i] == hekReaderObj.data_stream[i]){
+            Tcount++;
+        }else{
+            Fcount++;
+        }
+
     }
-
-    std::cout << '\n';
-
-    for(int i=0; i<20; i++)
-    {
-        std::cout << (int)(unsigned char)hekReaderObj.data_stream[i] << ' ';
-    }
+    std::cout << "False count : " << Fcount << "\t" << "True count: " << Tcount;
 
 
-    // hek_reader decoded char stream
-
+//    encoding data is truly transferred
+//    int Tcount = 0;
+//    int Fcount = 0;
+//
+//    char* data_stream = pgmObj.data_as_array();
+//    for(int i=0; i<leaf_nodes->length(); i++)
+//    {
+//        encoding_matrix[i].print_encoding_struct();
+//        std::cout << '\t';
+//        hekReaderObj.encoding_matrix[i].print_encoding_struct();
+//
+//        if(encoding_matrix[i].symbol == hekReaderObj.encoding_matrix[i].symbol
+//            && encoding_matrix[i].binary_encoding == hekReaderObj.encoding_matrix[i].binary_encoding){
+//            Tcount++;
+//        }else{
+//            Fcount++;
+//        }
+//
+//    }
+//    std::cout << "False count : " << Fcount << "\t" << "True count: " << Tcount;
 
 };
+
+void test18(){
+    std::string pgm_filename = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36.pgm"; // NOLINT(*-raw-string-literal)
+    std::string hek_file_name = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36_compressed.hek"; // NOLINT(*-raw-string-literal)
+    std::string pgm_output = "C:\\Users\\emrek\\CLionProjects\\project_huffman_in_khas\\files\\aug-78-36_decompressed.pgm"; // NOLINT(*-raw-string-literal)
+
+    pgmReader pgmObj = pgmReader(pgm_filename);
+    freqTable freqObj = freqTable(pgmObj.data_as_array(), pgmObj.data_size);
+    binaryTree binaryTreeObj = binaryTree(&freqObj);
+
+    // TODO simplify this function
+    hekWriter hekWriterObj = hekWriter(hek_file_name,
+                                       (short int)pgmObj.width,
+                                       (short int)pgmObj.height,
+                                       (short int)binaryTreeObj.leaf_nodes->length(),
+                                       binaryTreeObj.encoding_matrix,
+                                       pgmObj.data_size,
+                                       pgmObj.data_as_array() );
+
+    hekReader hekReaderObj = hekReader();
+
+    hekReaderObj.read_hek(hek_file_name);
+
+    pgmWriter pgmWriterObj = pgmWriter(&hekReaderObj, pgm_output);
+}
