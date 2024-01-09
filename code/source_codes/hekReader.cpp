@@ -76,7 +76,7 @@ void hekReader::read_hek(const std::string& hek_file_name) {
                 mask >>= 1;
 
                 // if encoding contains coding bigger than 15bits program will crash
-                if(pos==8){
+                if(pos==8 || pos==16){
                     break;
                 }
 
@@ -138,7 +138,7 @@ void hekReader::read_hek(const std::string& hek_file_name) {
         pos = 0;
         mask = 0b10000000;
 
-        if(buffer.length() >= 16){
+        if(buffer.length() >= 32){
             std::cerr << "this is buffer : " << buffer << std::endl;
             throw std::logic_error("buffer enlarged too much");
         }
